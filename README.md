@@ -1,5 +1,9 @@
 # HTML Academy. Личный проект «Pizza»
 
+# Имя наставника
+
+Олег Глущенко
+
 # Start nvm
 
 ```bash
