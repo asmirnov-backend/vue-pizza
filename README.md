@@ -14,9 +14,6 @@ source $(brew --prefix nvm)/nvm.sh
 - Docker
 - NodeJS >= 16
 
-## Docker установка
-https://docs.docker.com/get-docker/
-
 ## Node js установка
 Мы рекоммендуем использовать Node Version Manager для удобного управления версиями node.js
 
