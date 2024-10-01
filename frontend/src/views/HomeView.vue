@@ -7,12 +7,12 @@
         <div class="content__dough">
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
-            <div
-              v-for="dough in doughs"
-              :key="dough.id"
-              class="sheet__content dough"
-            >
-              <label class="dough__input dough__input--light">
+            <div class="sheet__content dough">
+              <label
+                v-for="dough in doughs"
+                :key="dough.id"
+                class="dough__input dough__input--light"
+              >
                 <input
                   type="radio"
                   name="dought"
