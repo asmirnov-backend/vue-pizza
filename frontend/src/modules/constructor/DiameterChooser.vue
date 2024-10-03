@@ -13,8 +13,10 @@
           <input
             type="radio"
             name="diameter"
-            :value="`${multiplierSizeMap[size.multiplier]}`"
+            :value="size.multiplier"
+            :checked="modelValue === size.multiplier"
             class="visually-hidden"
+            @input="emit('update:modelValue', $event.target.value)"
           />
           <span>{{ size.name }}</span>
         </label>
@@ -26,6 +28,15 @@
 <script setup>
 import sizes from "@/mocks/sizes.json";
 const multiplierSizeMap = { 1: "small", 2: "normal", 3: "big" };
+
+defineProps({
+  modelValue: {
+    type: Number,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["update:modelValue"]);
 </script>
 
 <style lang="scss" scoped>
@@ -77,24 +88,6 @@ const multiplierSizeMap = { 1: "small", 2: "normal", 3: "big" };
   &--small {
     @include b-s18-h21;
   }
-}
-
-.visually-hidden {
-  position: absolute;
-
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-
-  white-space: nowrap;
-
-  border: 0;
-
-  clip-path: inset(100%);
 }
 
 .diameter__input {

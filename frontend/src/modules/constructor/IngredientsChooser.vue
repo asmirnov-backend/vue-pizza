@@ -16,12 +16,23 @@
           <button
             type="button"
             class="counter__button counter__button--minus"
-            disabled
+            :disabled="modelValue[ingredient.enName] < 1"
+            @click="decrement(ingredient.enName)"
           >
             <span class="visually-hidden">Меньше</span>
           </button>
-          <input type="text" name="counter" class="counter__input" value="0" />
-          <button type="button" class="counter__button counter__button--plus">
+          <input
+            type="text"
+            name="counter"
+            class="counter__input"
+            :value="modelValue[ingredient.enName]"
+            @input="set($event, ingredient.enName)"
+          />
+          <button
+            type="button"
+            class="counter__button counter__button--plus"
+            @click="increment(ingredient.enName)"
+          >
             <span class="visually-hidden">Больше</span>
           </button>
         </div>
@@ -30,8 +41,42 @@
   </div>
 </template>
 
-<script setup>
-import ingredients from "@/mocks/ingredients.json";
+<script lang="ts" setup>
+import ingredients from "../../mocks/ingredients.json";
+import { Ingredients } from "./Ingredients";
+
+const props = defineProps({
+  modelValue: {
+    type: Ingredients,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["update:modelValue"]);
+
+const set = (event: any, ingredientName: string) => {
+  const newValue = new Ingredients({
+    ...props.modelValue,
+    [ingredientName]: Number(event.target.value) || 0,
+  });
+  emit("update:modelValue", newValue);
+};
+
+const increment = (ingredientName: string) => {
+  const newValue = new Ingredients({
+    ...props.modelValue,
+    [ingredientName]: (props.modelValue[ingredientName] || 0) + 1,
+  });
+  emit("update:modelValue", newValue);
+};
+
+const decrement = (ingredientName: string) => {
+  const newValue = new Ingredients({
+    ...props.modelValue,
+    [ingredientName]: (props.modelValue[ingredientName] || 0) - 1,
+  });
+  emit("update:modelValue", newValue);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -306,23 +351,5 @@ import ingredients from "@/mocks/ingredients.json";
   &--salmon::before {
     background-image: url("@/assets/img/filling/salmon.svg");
   }
-}
-
-.visually-hidden {
-  position: absolute;
-
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-
-  white-space: nowrap;
-
-  border: 0;
-
-  clip-path: inset(100%);
 }
 </style>
