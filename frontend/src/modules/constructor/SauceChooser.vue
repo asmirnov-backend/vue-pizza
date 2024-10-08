@@ -11,7 +11,8 @@
         type="radio"
         name="sauce"
         :value="sauce.name"
-        :checked="sauce.id === 1"
+        :checked="modelValue === sauce.name"
+        @input="emit('update:modelValue', $event.target.value)"
       />
       <span>{{ sauce.name }}</span>
     </label>
@@ -20,6 +21,15 @@
 
 <script setup>
 import sauces from "@/mocks/sauces.json";
+
+defineProps({
+  modelValue: {
+    type: Number,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["update:modelValue"]);
 </script>
 
 <style lang="scss" scoped>
@@ -150,23 +160,5 @@ import sauces from "@/mocks/sauces.json";
   &--small {
     @include b-s18-h21;
   }
-}
-
-.visually-hidden {
-  position: absolute;
-
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-
-  white-space: nowrap;
-
-  border: 0;
-
-  clip-path: inset(100%);
 }
 </style>

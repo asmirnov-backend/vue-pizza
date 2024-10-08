@@ -11,5 +11,6 @@ module.exports = {
   env: {
     "vue/setup-compiler-macros": true,
   },
+  parser: "@babel/eslint-parser",
   rules: { "no-unused-vars": 1 },
 };
