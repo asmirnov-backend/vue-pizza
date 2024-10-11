@@ -11,31 +11,10 @@
         <span class="filling" :class="`filling--${ingredient.enName}`">{{
           ingredient.name
         }}</span>
-
-        <div class="counter counter--orange ingredients__counter">
-          <button
-            type="button"
-            class="counter__button counter__button--minus"
-            :disabled="modelValue[ingredient.enName] < 1"
-            @click="decrement(ingredient.enName)"
-          >
-            <span class="visually-hidden">Меньше</span>
-          </button>
-          <input
-            type="text"
-            name="counter"
-            class="counter__input"
-            :value="modelValue[ingredient.enName]"
-            @input="set($event, ingredient.enName)"
-          />
-          <button
-            type="button"
-            class="counter__button counter__button--plus"
-            @click="increment(ingredient.enName)"
-          >
-            <span class="visually-hidden">Больше</span>
-          </button>
-        </div>
+        <AppCounter
+          :value="modelValue[ingredient.enName]"
+          @update:value="updateValue($event, ingredient.enName)"
+        />
       </li>
     </ul>
   </div>
@@ -44,6 +23,7 @@
 <script lang="ts" setup>
 import ingredients from "../../mocks/ingredients.json";
 import { Ingredients } from "./Ingredients";
+import AppCounter from "../../common/components/AppCounter.vue";
 
 const props = defineProps({
   modelValue: {
@@ -54,28 +34,12 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const set = (event: any, ingredientName: string) => {
-  const newValue = new Ingredients({
+const updateValue = (newValue: number, ingredientName: string) => {
+  const updatedIngredients = new Ingredients({
     ...props.modelValue,
-    [ingredientName]: Number(event.target.value) || 0,
+    [ingredientName]: newValue,
   });
-  emit("update:modelValue", newValue);
-};
-
-const increment = (ingredientName: string) => {
-  const newValue = new Ingredients({
-    ...props.modelValue,
-    [ingredientName]: (props.modelValue[ingredientName] || 0) + 1,
-  });
-  emit("update:modelValue", newValue);
-};
-
-const decrement = (ingredientName: string) => {
-  const newValue = new Ingredients({
-    ...props.modelValue,
-    [ingredientName]: (props.modelValue[ingredientName] || 0) - 1,
-  });
-  emit("update:modelValue", newValue);
+  emit("update:modelValue", updatedIngredients);
 };
 </script>
 
