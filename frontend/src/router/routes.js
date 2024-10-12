@@ -6,4 +6,11 @@ export default [
     children: [],
     meta: { layout: "AppLayoutDefault" },
   },
+  {
+    path: "/cart",
+    name: "CartView",
+    component: () => import("../views/CartView.vue"),
+    children: [],
+    meta: { layout: "AppLayoutDefault" },
+  },
 ];
