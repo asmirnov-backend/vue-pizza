@@ -20,4 +20,11 @@ export default [
     children: [],
     meta: { layout: "AppLayoutDefault" },
   },
+  {
+    path: "/user",
+    name: "UserView",
+    component: () => import("../views/UserView.vue"),
+    children: [],
+    meta: { layout: "AppLayoutSidebar", title: "Мои данные" },
+  },
 ];
