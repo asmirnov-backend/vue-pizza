@@ -11,7 +11,6 @@
 <script setup>
 import AppHeader from "../common/components/AppHeader.vue";
 import AppSidebar from "../common/components/AppSidebar.vue";
-import { useRoute } from "vue-router";
 </script>
 
 <style lang="scss" scoped>
