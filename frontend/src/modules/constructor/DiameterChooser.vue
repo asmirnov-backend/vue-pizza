@@ -13,8 +13,8 @@
           <input
             type="radio"
             name="diameter"
-            :value="size.multiplier"
-            :checked="modelValue === size.multiplier"
+            :value="size.id"
+            :checked="modelValue === size.id"
             class="visually-hidden"
             @input="emit('update:modelValue', $event.target.value)"
           />

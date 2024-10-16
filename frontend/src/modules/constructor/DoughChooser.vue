@@ -13,8 +13,8 @@
             type="radio"
             name="dought"
             class="visually-hidden"
-            :value="dough.type"
-            :checked="modelValue === dough.type"
+            :value="dough.id"
+            :checked="modelValue === dough.id"
             @input="emit('update:modelValue', $event.target.value)"
           />
           <b>{{ dough.name }}</b>
@@ -30,7 +30,7 @@ import doughs from "@/mocks/dough.json";
 
 defineProps({
   modelValue: {
-    type: String,
+    type: Number,
     required: true,
   },
 });

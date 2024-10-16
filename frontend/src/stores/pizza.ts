@@ -199,20 +199,6 @@ export const usePizzaStore = defineStore("pizza", {
         description: "Из твердых сортов пшеницы",
         price: 300,
       },
-      {
-        id: 3,
-        name: "Тонкое",
-        image: "/public/img/dough-light.svg",
-        description: "Из твердых сортов пшеницы",
-        price: 300,
-      },
-      {
-        id: 4,
-        name: "Толстое",
-        image: "/public/img/dough-large.svg",
-        description: "Из твердых сортов пшеницы",
-        price: 300,
-      },
     ],
     sauces: [
       {
@@ -275,6 +261,19 @@ export const usePizzaStore = defineStore("pizza", {
       },
     ],
   }),
-  getters: {},
+  getters: {
+    getDough: (state) =>
+      state.dough.map((e) => ({
+        ...e,
+        type: e.image.split("/")[-1].split(".")[0].split("-")[-1],
+      })),
+    getIngredients: (state) =>
+      state.ingredients.map((e) => ({
+        ...e,
+        enName: e.image.split("/")[-1].split(".")[0],
+      })),
+    getSauces: (state) => state.sauces,
+    getSizes: (state) => state.sizes,
+  },
   actions: {},
 });
