@@ -260,6 +260,16 @@ export const usePizzaStore = defineStore("pizza", {
         multiplier: 3,
       },
     ],
+    choosed: {
+      name: "",
+      sauceId: 1,
+      doughId: 1,
+      sizeId: 1,
+      ingredients: Array.from({ length: 30 }, (_, i) => i + 1).map((i) => ({
+        ingredientId: i,
+        quantity: 0,
+      })),
+    },
   }),
   getters: {
     getDough: (state) =>
@@ -274,6 +284,27 @@ export const usePizzaStore = defineStore("pizza", {
       })),
     getSauces: (state) => state.sauces,
     getSizes: (state) => state.sizes,
+
+    getPrice: (state) => {
+      let price = 0;
+
+      price +=
+        state.dough.find((v) => v.id == state.choosed.doughId)?.price ?? 0;
+      price +=
+        state.sauces.find((v) => v.id == state.choosed.sauceId)?.price ?? 0;
+      price += state.choosed.ingredients
+        .map(
+          (choosedIngredient) =>
+            (state.ingredients.find(
+              (v) => v.id == choosedIngredient.ingredientId
+            )?.price ?? 0) * choosedIngredient.quantity
+        )
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      price *=
+        state.sizes.find((v) => v.id == state.choosed.sizeId)?.multiplier ?? 1;
+
+      return price;
+    },
   },
   actions: {},
 });
