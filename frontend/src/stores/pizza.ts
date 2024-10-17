@@ -1,7 +1,56 @@
 import { defineStore } from "pinia";
 
+interface Ingredient {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+}
+
+interface Dough {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+  price: number;
+}
+
+interface Sauce {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface Size {
+  id: number;
+  name: string;
+  image: string;
+  multiplier: number;
+}
+
+interface ChoosedIngredient {
+  ingredientId: number;
+  quantity: number;
+}
+
+interface Choosed {
+  name: string;
+  sauceId: number;
+  doughId: number;
+  sizeId: number;
+  ingredients: ChoosedIngredient[];
+}
+
+interface PizzaState {
+  ingredients: Ingredient[];
+  dough: Dough[];
+  sauces: Sauce[];
+  sizes: Size[];
+  choosed: Choosed;
+}
+
 export const usePizzaStore = defineStore("pizza", {
-  state: () => ({
+  state: (): PizzaState => ({
     ingredients: [
       {
         id: 1,
@@ -306,5 +355,42 @@ export const usePizzaStore = defineStore("pizza", {
       return price;
     },
   },
-  actions: {},
+  actions: {
+    setSauceId(id: number) {
+      this.choosed.sauceId = id;
+    },
+    setDoughId(id: number) {
+      this.choosed.doughId = id;
+    },
+    setSizeId(id: number) {
+      this.choosed.sizeId = id;
+    },
+    setIngredient(ingredientId: number, quantity: number) {
+      const ingredientIndex = this.choosed.ingredients.findIndex(
+        (ingredient: ChoosedIngredient) =>
+          ingredient.ingredientId === ingredientId
+      );
+
+      if (ingredientIndex !== -1) {
+        this.choosed.ingredients[ingredientIndex].quantity = quantity;
+      } else {
+        this.choosed.ingredients.push({ ingredientId, quantity });
+      }
+    },
+    setName(name: string) {
+      this.choosed.name = name;
+    },
+    clearChoosed() {
+      this.choosed = {
+        name: "",
+        sauceId: 1,
+        doughId: 1,
+        sizeId: 1,
+        ingredients: Array.from({ length: 30 }, (_, i) => i + 1).map((i) => ({
+          ingredientId: i,
+          quantity: 0,
+        })),
+      };
+    },
+  },
 });

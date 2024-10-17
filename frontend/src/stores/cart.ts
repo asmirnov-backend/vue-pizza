@@ -1,7 +1,40 @@
 import { defineStore } from "pinia";
 
+interface Misc {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+}
+
+interface ChoosedMisc {
+  miscId: number;
+  quantity: number;
+}
+
+interface ChoosedIngredient {
+  ingredientId: number;
+  quantity: number;
+}
+
+interface ChoosedPizza {
+  name: string;
+  sauceId: number;
+  doughId: number;
+  quantity: number;
+  price: number;
+  sizeId: number;
+  ingredients: ChoosedIngredient[];
+}
+
+interface CartState {
+  misc: Misc[];
+  choosedMiscs: ChoosedMisc[];
+  choosedPizzas: ChoosedPizza[];
+}
+
 export const useCartStore = defineStore("cart", {
-  state: () => ({
+  state: (): CartState => ({
     misc: [
       {
         id: 1,
@@ -81,5 +114,32 @@ export const useCartStore = defineStore("cart", {
       return price;
     },
   },
-  actions: {},
+  actions: {
+    setMiscQuantity(miscId: number, quantity: number) {
+      const miscIndex = this.choosedMiscs.findIndex(
+        (misc: ChoosedMisc) => misc.miscId === miscId
+      );
+
+      if (miscIndex !== -1) {
+        this.choosedMiscs[miscIndex].quantity = quantity;
+      } else {
+        this.choosedMiscs.push({ miscId, quantity });
+      }
+    },
+
+    addPizza(pizza: ChoosedPizza) {
+      this.choosedPizzas.push(pizza);
+    },
+
+    removePizza(index: number) {
+      if (index >= 0 && index < this.choosedPizzas.length) {
+        this.choosedPizzas.splice(index, 1);
+      }
+    },
+
+    clearCart() {
+      this.choosedMiscs = [];
+      this.choosedPizzas = [];
+    },
+  },
 });
