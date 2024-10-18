@@ -200,6 +200,15 @@ export const usePizzaStore = defineStore("pizza", {
     },
   }),
   getters: {
+    getSizeName: (state) => (id: number) =>
+      state.sizes.find((e) => e.id == id)?.name,
+    getDoughName: (state) => (id: number) =>
+      state.dough.find((e) => e.id == id)?.name,
+    getSauceName: (state) => (id: number) =>
+      state.sauces.find((e) => e.id == id)?.name,
+    getIngredientName: (state) => (id: number) =>
+      state.ingredients.find((e) => e.id == id)?.name,
+
     getName: (state) => state.choosed.name,
     getDough: (state) =>
       state.dough.map((e) => ({
@@ -239,7 +248,8 @@ export const usePizzaStore = defineStore("pizza", {
 
       return price;
     },
-    isReadyForCooking: (state) => state.choosed.ingredients.length > 0,
+    isReadyForCooking: (state) =>
+      state.choosed.ingredients.length > 0 && state.choosed.name,
   },
   actions: {
     setSauceId(id: number) {
