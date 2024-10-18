@@ -4,7 +4,7 @@
       <h2 class="title title--small sheet__title">Выберите тесто</h2>
       <div class="sheet__content dough">
         <label
-          v-for="dough in doughs"
+          v-for="dough in store.getDough"
           :key="dough.id"
           class="dough__input"
           :class="`dough__input--${dough.type}`"
@@ -14,8 +14,8 @@
             name="dought"
             class="visually-hidden"
             :value="dough.id"
-            :checked="modelValue === dough.id"
-            @input="emit('update:modelValue', $event.target.value)"
+            :checked="store.choosed.doughId === dough.id"
+            @input="store.setDoughId($event.target.value)"
           />
           <b>{{ dough.name }}</b>
           <span>{{ dough.description }}</span>
@@ -26,16 +26,8 @@
 </template>
 
 <script setup>
-import doughs from "@/mocks/dough.json";
-
-defineProps({
-  modelValue: {
-    type: Number,
-    required: true,
-  },
-});
-
-const emit = defineEmits(["update:modelValue"]);
+import { usePizzaStore } from "../../stores/pizza";
+const store = usePizzaStore();
 </script>
 
 <style lang="scss" scoped>
