@@ -11,7 +11,7 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">0 ₽</router-link>
+      <router-link to="/cart">{{ cartStore.getPrice }} ₽</router-link>
     </div>
     <div class="header__user">
       <router-link class="header__login" to="/login"
@@ -20,6 +20,11 @@
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+import { useCartStore } from "../../stores/cart";
+const cartStore = useCartStore();
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
