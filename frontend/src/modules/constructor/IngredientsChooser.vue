@@ -4,7 +4,7 @@
 
     <ul class="ingredients__list">
       <li
-        v-for="ingredient in ingredients"
+        v-for="ingredient in store.getIngredients"
         :key="ingredient.id"
         class="ingredients__item"
       >
@@ -12,8 +12,12 @@
           ingredient.name
         }}</span>
         <AppCounter
-          :value="modelValue[ingredient.enName]"
-          @update:value="updateValue($event, ingredient.enName)"
+          :value="
+            store.choosed.ingredients.find(
+              (e) => e.ingredientId == ingredient.id
+            )?.quantity ?? 0
+          "
+          @update:value="store.setIngredientQuantity(ingredient.id, $event)"
         />
       </li>
     </ul>
@@ -21,26 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-import ingredients from "../../mocks/ingredients.json";
-import { Ingredients } from "./Ingredients";
 import AppCounter from "../../common/components/AppCounter.vue";
 
-const props = defineProps({
-  modelValue: {
-    type: Ingredients,
-    required: true,
-  },
-});
-
-const emit = defineEmits(["update:modelValue"]);
-
-const updateValue = (newValue: number, ingredientName: string) => {
-  const updatedIngredients = new Ingredients({
-    ...props.modelValue,
-    [ingredientName]: newValue,
-  });
-  emit("update:modelValue", updatedIngredients);
-};
+import { usePizzaStore } from "../../stores/pizza";
+const store = usePizzaStore();
 </script>
 
 <style lang="scss" scoped>
