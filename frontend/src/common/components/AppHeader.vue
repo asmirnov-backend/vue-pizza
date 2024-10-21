@@ -13,7 +13,25 @@
     <div class="header__cart">
       <router-link to="/cart">{{ cartStore.getPrice }} ₽</router-link>
     </div>
-    <div class="header__user">
+
+    <div v-if="userStore.isAuthed" class="header__user">
+      <router-link to="/user">
+        <picture>
+          <img
+            :src="userStore.getWhoAmI.avatar"
+            :alt="userStore.getWhoAmI.name"
+            width="32"
+            height="32"
+          />
+        </picture>
+        <span>{{ userStore.getWhoAmI.name }}</span>
+      </router-link>
+      <router-link to="/" class="header__logout"
+        ><span>Выйти</span></router-link
+      >
+    </div>
+
+    <div v-else class="header__user">
       <router-link class="header__login" to="/login"
         ><span>Войти</span></router-link
       >
@@ -23,7 +41,9 @@
 
 <script setup lang="ts">
 import { useCartStore } from "../../stores/cart";
+import { useUserStore } from "../../stores/user";
 const cartStore = useCartStore();
+const userStore = useUserStore();
 </script>
 
 <style lang="scss" scoped>
