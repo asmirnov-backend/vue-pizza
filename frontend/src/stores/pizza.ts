@@ -210,44 +210,50 @@ export const usePizzaStore = defineStore("pizza", {
       state.ingredients.find((e) => e.id == id)?.name,
 
     getName: (state) => state.choosed.name,
-    getDough: (state) =>
-      state.dough.map((e) => ({
-        ...e,
-        type: e.image.split("/")[3].split(".")[0].split("-")[1],
-      })),
+    getDough: (state) => state.dough,
     getIngredientEnName: (state) => (id: number) =>
       state.ingredients
         .find((e) => e.id == id)!
         .image.split("/")[4]
         .split(".")[0],
-    getIngredients: (state) =>
-      state.ingredients.map((e) => ({
-        ...e,
-        enName: e.image.split("/")[4].split(".")[0],
-      })),
+    getIngredients: (state) => state.ingredients,
     getSauces: (state) => state.sauces,
     getSizes: (state) => state.sizes,
 
-    getPrice: (state) => {
-      let price = 0;
+    getChoosedIngredients: (state) =>
+      state.choosed.ingredients.map((i) => ({
+        ...state.ingredients.find((e) => e.id == i.ingredientId),
+        ...i,
+      })),
 
-      price +=
-        state.dough.find((v) => v.id == state.choosed.doughId)?.price ?? 0;
-      price +=
-        state.sauces.find((v) => v.id == state.choosed.sauceId)?.price ?? 0;
-      price += state.choosed.ingredients
-        .map(
-          (choosedIngredient) =>
-            (state.ingredients.find(
-              (v) => v.id == choosedIngredient.ingredientId
-            )?.price ?? 0) * choosedIngredient.quantity
-        )
-        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-      price *=
-        state.sizes.find((v) => v.id == state.choosed.sizeId)?.multiplier ?? 1;
-
-      return price;
+    getPrice(state) {
+      return this.getPizzaPrice(state.choosed);
     },
+
+    getPizzaPrice:
+      (state) =>
+      (pizza: {
+        sauceId: number;
+        doughId: number;
+        sizeId: number;
+        ingredients: ChoosedIngredient[];
+      }) => {
+        let price = 0;
+
+        price += state.dough.find((v) => v.id == pizza.doughId)?.price ?? 0;
+        price += state.sauces.find((v) => v.id == pizza.sauceId)?.price ?? 0;
+        price += pizza.ingredients
+          .map(
+            (choosedIngredient) =>
+              (state.ingredients.find(
+                (v) => v.id == choosedIngredient.ingredientId
+              )?.price ?? 0) * choosedIngredient.quantity
+          )
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        price *= state.sizes.find((v) => v.id == pizza.sizeId)?.multiplier ?? 1;
+
+        return price;
+      },
     isReadyForCooking: (state) =>
       state.choosed.ingredients.length > 0 && state.choosed.name,
   },

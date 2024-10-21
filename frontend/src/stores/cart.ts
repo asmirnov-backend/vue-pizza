@@ -78,6 +78,7 @@ export const useCartStore = defineStore("cart", {
   }),
   getters: {
     getMisc: (state) => state.misc,
+    getMiscById: (state) => (id: number) => state.misc.find((e) => e.id == id),
     getChoosedPizzas: (state) => state.choosedPizzas,
     getChoosedMiscs: (state) =>
       state.misc.map((e) => ({
