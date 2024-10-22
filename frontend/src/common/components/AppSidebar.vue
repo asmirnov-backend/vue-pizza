@@ -53,7 +53,7 @@
 }
 
 .layout__sidebar {
-  position: fixed;
+  position: absolute;
   z-index: 2;
   top: 60px;
   left: 0;
