@@ -107,7 +107,6 @@ export const useCartStore = defineStore("cart", {
       return (
         state.choosedPhone &&
         state.choosedAddress.building &&
-        state.choosedAddress.flat &&
         state.choosedAddress.street &&
         this.getPrice > 0
       );

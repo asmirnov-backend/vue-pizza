@@ -85,7 +85,9 @@ const calcOrderPrice = (order: Order): number => {
     .map((pizza) => pizzaStore.getPizzaPrice(pizza) * pizza.quantity)
     .reduce((a, b) => a + b, 0);
   price += order.orderMisc
-    .map((mics) => cartStore.getMiscById(mics.id)?.price ?? 0 * mics.quantity)
+    .map(
+      (mics) => (cartStore.getMiscById(mics.miscId)?.price ?? 0) * mics.quantity
+    )
     .reduce((a, b) => a + b, 0);
 
   return price;
