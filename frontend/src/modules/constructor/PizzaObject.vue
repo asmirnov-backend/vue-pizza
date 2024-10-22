@@ -1,26 +1,33 @@
 <template>
-  <div class="content__constructor">
-    <div
-      class="pizza"
-      :class="`pizza--foundation--${
-        store.choosed.doughId == 1 ? 'small' : 'big'
-      }-${store.choosed.sauceId == 1 ? 'tomato' : 'creamy'}`"
-    >
-      <div class="pizza__wrapper">
-        <div
-          v-for="ingredient in store.choosed.ingredients"
-          :key="ingredient.ingredientId"
-          class="pizza__filling"
-          :class="getIngredientClass(ingredient)"
-        ></div>
+  <app-drop @drop="handleDrop">
+    <div class="content__constructor">
+      <div
+        class="pizza"
+        :class="`pizza--foundation--${
+          store.choosed.doughId == 1 ? 'small' : 'big'
+        }-${store.choosed.sauceId == 1 ? 'tomato' : 'creamy'}`"
+      >
+        <div class="pizza__wrapper">
+          <div
+            v-for="ingredient in store.choosed.ingredients"
+            :key="ingredient.ingredientId"
+            class="pizza__filling"
+            :class="getIngredientClass(ingredient)"
+          ></div>
+        </div>
       </div>
     </div>
-  </div>
+  </app-drop>
 </template>
 
 <script setup lang="ts">
+import AppDrop from "../../common/components/AppDrop.vue";
 import { usePizzaStore } from "../../stores/pizza";
 const store = usePizzaStore();
+
+function handleDrop(transferData: { id: number }) {
+  store.incrementСhoosedIngredientQuantity(transferData.id);
+}
 
 function getIngredientClass(ingredient) {
   const baseClass = `pizza__filling--${store.getIngredientEnName(

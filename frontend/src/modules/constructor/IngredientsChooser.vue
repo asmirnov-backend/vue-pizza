@@ -8,18 +8,22 @@
         :key="ingredient.id"
         class="ingredients__item"
       >
-        <span
-          class="filling"
-          :style="{ '--background-image': `url(${ingredient.image})` }"
-          >{{ ingredient.name }}
-        </span>
+        <app-drag :data-transfer="ingredient" :draggable="true">
+          <span
+            class="filling"
+            :style="{ '--background-image': `url(${ingredient.image})` }"
+            >{{ ingredient.name }}
+          </span>
+        </app-drag>
         <AppCounter
           :value="
             store.choosed.ingredients.find(
               (e) => e.ingredientId == ingredient.id
             )?.quantity ?? 0
           "
-          @update:value="store.setIngredientQuantity(ingredient.id, $event)"
+          @update:value="
+            store.setСhoosedIngredientQuantity(ingredient.id, $event)
+          "
         />
       </li>
     </ul>
@@ -28,6 +32,7 @@
 
 <script lang="ts" setup>
 import AppCounter from "../../common/components/AppCounter.vue";
+import AppDrag from "../../common/components/AppDrag.vue";
 
 import { usePizzaStore } from "../../stores/pizza";
 const store = usePizzaStore();

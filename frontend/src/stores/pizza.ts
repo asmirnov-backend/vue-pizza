@@ -267,7 +267,7 @@ export const usePizzaStore = defineStore("pizza", {
     setSizeId(id: number) {
       this.choosed.sizeId = id;
     },
-    setIngredientQuantity(ingredientId: number, quantity: number) {
+    setСhoosedIngredientQuantity(ingredientId: number, quantity: number) {
       const ingredientIndex = this.choosed.ingredients.findIndex(
         (ingredient: ChoosedIngredient) =>
           ingredient.ingredientId === ingredientId
@@ -277,6 +277,18 @@ export const usePizzaStore = defineStore("pizza", {
         this.choosed.ingredients[ingredientIndex].quantity = quantity;
       } else {
         this.choosed.ingredients.push({ ingredientId, quantity });
+      }
+    },
+    incrementСhoosedIngredientQuantity(ingredientId: number) {
+      const ingredientIndex = this.choosed.ingredients.findIndex(
+        (ingredient: ChoosedIngredient) =>
+          ingredient.ingredientId === ingredientId
+      );
+
+      if (ingredientIndex !== -1) {
+        this.choosed.ingredients[ingredientIndex].quantity += 1;
+      } else {
+        this.choosed.ingredients.push({ ingredientId, quantity: 1 });
       }
     },
     setName(name: string) {
