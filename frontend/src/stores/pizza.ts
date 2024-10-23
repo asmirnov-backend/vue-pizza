@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { MAX_INGREDIENT_COUNT } from "../common/constants";
 
 interface Ingredient {
   id: number;
@@ -220,6 +221,9 @@ export const usePizzaStore = defineStore("pizza", {
     getSauces: (state) => state.sauces,
     getSizes: (state) => state.sizes,
 
+    getChoosedIngredientById: (state) => (id: number) =>
+      state.choosed.ingredients.find((e) => e.ingredientId == id),
+
     getChoosedIngredients: (state) =>
       state.choosed.ingredients.map((i) => ({
         ...state.ingredients.find((e) => e.id == i.ingredientId),
@@ -274,7 +278,8 @@ export const usePizzaStore = defineStore("pizza", {
       );
 
       if (ingredientIndex !== -1) {
-        this.choosed.ingredients[ingredientIndex].quantity = quantity;
+        this.choosed.ingredients[ingredientIndex].quantity =
+          quantity > MAX_INGREDIENT_COUNT ? MAX_INGREDIENT_COUNT : quantity;
       } else {
         this.choosed.ingredients.push({ ingredientId, quantity });
       }
@@ -286,7 +291,12 @@ export const usePizzaStore = defineStore("pizza", {
       );
 
       if (ingredientIndex !== -1) {
-        this.choosed.ingredients[ingredientIndex].quantity += 1;
+        if (
+          this.choosed.ingredients[ingredientIndex].quantity <
+          MAX_INGREDIENT_COUNT
+        ) {
+          this.choosed.ingredients[ingredientIndex].quantity += 1;
+        }
       } else {
         this.choosed.ingredients.push({ ingredientId, quantity: 1 });
       }

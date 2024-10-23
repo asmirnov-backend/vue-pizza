@@ -17,6 +17,7 @@
     />
     <button
       type="button"
+      :disabled="value >= maxValue"
       class="counter__button counter__button--plus"
       @click="increment"
     >
@@ -30,6 +31,11 @@ const props = defineProps({
   value: {
     type: Number,
     required: true,
+  },
+  maxValue: {
+    type: Number,
+    required: false,
+    default: Number.MAX_SAFE_INTEGER,
   },
 });
 
