@@ -259,7 +259,10 @@ export const usePizzaStore = defineStore("pizza", {
         return price;
       },
     isReadyForCooking: (state) =>
-      state.choosed.ingredients.length > 0 && state.choosed.name,
+      state.choosed.name &&
+      state.choosed.ingredients
+        .map((e) => e.quantity)
+        .reduce((a, b) => a + b, 0) > 0,
   },
   actions: {
     setSauceId(id: number) {

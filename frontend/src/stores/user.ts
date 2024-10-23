@@ -284,7 +284,7 @@ export const useUserStore = defineStore("user", {
         fullAddress: [addr.street, addr.building, addr.flat].join(", "),
       })),
     getOrders: (state) => state.orders,
-    isAuthed: (state) => Boolean(state.whoAmI.email),
+    isAuthenticated: (state) => Boolean(state.whoAmI.email),
   },
   actions: {
     setWhoAmI(whoAmI: WhoAmI) {

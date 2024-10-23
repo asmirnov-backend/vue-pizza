@@ -14,7 +14,7 @@
       <router-link to="/cart">{{ cartStore.getPrice }} ₽</router-link>
     </div>
 
-    <div v-if="userStore.isAuthed" class="header__user">
+    <div v-if="userStore.isAuthenticated" class="header__user">
       <router-link to="/user">
         <picture>
           <img
