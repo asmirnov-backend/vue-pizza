@@ -24,6 +24,7 @@
       <div class="counter cart-list__counter">
         <AppCounter
           :value="pizza.quantity"
+          accent
           @update:value="cartStore.setPizzaQuantity(index, $event)"
         />
       </div>

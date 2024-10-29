@@ -14,6 +14,7 @@
           <div class="counter additional-list__counter">
             <AppCounter
               :value="mics.quantity"
+              accent
               @update:value="cartStore.setMiscQuantity(mics.id, $event)"
             />
           </div>
