@@ -1,37 +1,43 @@
 export default [
   {
     path: "/",
-    name: "HomeView",
+    name: "home",
     component: () => import("../views/HomeView.vue"),
     children: [],
     meta: { layout: "AppLayoutMain" },
   },
   {
     path: "/cart",
-    name: "CartView",
+    name: "cart",
     component: () => import("../views/CartView.vue"),
     children: [],
     meta: { layout: "AppLayoutMain" },
   },
   {
     path: "/login",
-    name: "LoginView",
+    name: "login",
     component: () => import("../views/LoginView.vue"),
     children: [],
     meta: { layout: "AppLayoutDefault" },
   },
   {
     path: "/user",
-    name: "UserView",
+    name: "user",
     component: () => import("../views/UserView.vue"),
-    children: [],
     meta: { layout: "AppLayoutSidebar" },
-  },
-  {
-    path: "/orders",
-    name: "OrdersView",
-    component: () => import("../views/OrdersView.vue"),
-    children: [],
-    meta: { layout: "AppLayoutSidebar" },
+    children: [
+      {
+        path: "profile",
+        name: "profile",
+        component: () => import("../views/ProfileView.vue"),
+        meta: { layout: "AppLayoutSidebar" },
+      },
+      {
+        path: "orders",
+        name: "orders",
+        component: () => import("../views/OrdersView.vue"),
+        meta: { layout: "AppLayoutSidebar" },
+      },
+    ],
   },
 ];

@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header__logo">
-      <router-link to="/" class="logo">
+      <router-link :to="{ name: 'home' }" class="logo">
         <img
           src="@/assets/img/logo.svg"
           alt="V!U!E! Pizza logo"
@@ -11,11 +11,13 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{ cartStore.getPrice }} ₽</router-link>
+      <router-link :to="{ name: 'cart' }"
+        >{{ cartStore.getPrice }} ₽</router-link
+      >
     </div>
 
     <div v-if="userStore.isAuthenticated" class="header__user">
-      <router-link to="/user">
+      <router-link :to="{ name: 'user' }">
         <picture>
           <img
             :src="userStore.getWhoAmI.avatar"
@@ -26,13 +28,13 @@
         </picture>
         <span>{{ userStore.getWhoAmI.name }}</span>
       </router-link>
-      <router-link to="/" class="header__logout"
+      <router-link :to="{ name: 'home' }" class="header__logout"
         ><span>Выйти</span></router-link
       >
     </div>
 
     <div v-else class="header__user">
-      <router-link class="header__login" to="/login"
+      <router-link class="header__login" :to="{ name: 'login' }"
         ><span>Войти</span></router-link
       >
     </div>

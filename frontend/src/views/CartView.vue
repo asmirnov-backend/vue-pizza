@@ -43,7 +43,9 @@
     </main>
     <section class="footer">
       <div class="footer__more">
-        <router-link to="/" class="button button--border button--arrow"
+        <router-link
+          :to="{ name: 'home' }"
+          class="button button--border button--arrow"
           >Хочу еще одну</router-link
         >
       </div>
