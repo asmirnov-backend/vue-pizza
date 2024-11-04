@@ -14,7 +14,13 @@
       </div>
 
       <div class="order__button">
-        <button type="button" class="button button--border">Удалить</button>
+        <button
+          type="button"
+          class="button button--border"
+          @click="userStore.removeOrder(order.id)"
+        >
+          Удалить
+        </button>
       </div>
       <div class="order__button">
         <button type="button" class="button">Повторить</button>

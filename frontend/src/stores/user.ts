@@ -296,5 +296,9 @@ export const useUserStore = defineStore("user", {
     setOrders(orders: Order[]) {
       this.orders = orders;
     },
+    removeOrder(id: number) {
+      const indexInStore = this.orders.findIndex((order) => order.id == id);
+      this.orders.splice(indexInStore, 1);
+    },
   },
 });
