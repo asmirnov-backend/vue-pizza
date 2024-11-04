@@ -36,10 +36,10 @@
       <div class="cart-list__button">
         <button
           type="button"
-          @click="cartStore.removePizza(index)"
+          @click="changePizza(index)"
           class="cart-list__edit"
         >
-          Удалить
+          Изменить
         </button>
       </div>
     </li>
@@ -50,8 +50,19 @@
 import AppCounter from "../../common/components/AppCounter.vue";
 import PizzaProduct from "../../common/components/PizzaProduct.vue";
 import { useCartStore } from "../../stores/cart";
+import { usePizzaStore } from "../../stores/pizza";
+import { useRouter } from "vue-router";
 
 const cartStore = useCartStore();
+const pizzaStore = usePizzaStore();
+const router = useRouter();
+
+function changePizza(index: number) {
+  const pizzaForChange = cartStore.getChoosedPizzas[index];
+  pizzaStore.setPizzaForChangeIt(pizzaForChange);
+  cartStore.removePizza(index);
+  router.push({ name: "home" });
+}
 </script>
 
 <style lang="scss" scoped>

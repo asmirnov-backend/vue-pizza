@@ -61,7 +61,7 @@ function addCurrentPizzaToStoreAndNavToCart() {
     quantity: 1,
   });
   pizzaStore.clearChoosed();
-  router.push("/cart");
+  router.push({ name: "cart" });
 }
 </script>
 

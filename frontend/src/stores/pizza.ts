@@ -265,14 +265,17 @@ export const usePizzaStore = defineStore("pizza", {
         .reduce((a, b) => a + b, 0) > 0,
   },
   actions: {
-    setSauceId(id: number) {
-      this.choosed.sauceId = id;
+    setPizzaForChangeIt(pizza: Choosed) {
+      this.choosed = pizza;
     },
-    setDoughId(id: number) {
-      this.choosed.doughId = id;
+    setSauceId(id: number | string) {
+      this.choosed.sauceId = Number(id);
     },
-    setSizeId(id: number) {
-      this.choosed.sizeId = id;
+    setDoughId(id: number | string) {
+      this.choosed.doughId = Number(id);
+    },
+    setSizeId(id: number | string) {
+      this.choosed.sizeId = Number(id);
     },
     setСhoosedIngredientQuantity(ingredientId: number, quantity: number) {
       const ingredientIndex = this.choosed.ingredients.findIndex(
