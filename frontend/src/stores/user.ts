@@ -82,17 +82,17 @@ export const useUserStore = defineStore("user", {
         id: 1,
         name: "Дом, милый дом",
         street: "ул Фучика",
-        building: "дом 34",
+        building: "дом 40",
         flat: "квартира 12",
         comment: "Не звоните в дверь, злая собака!!!",
         userId: "1",
       },
       {
         id: 2,
-        name: "Дом тёщи",
+        name: "Дом бабушки",
         street: "ул Пакостей",
         building: "дом 34",
-        flat: "квартира 12",
+        flat: "квартира 92",
         comment: "Не звоните в дверь, злой кот!!!",
         userId: "1",
       },
@@ -299,6 +299,9 @@ export const useUserStore = defineStore("user", {
     removeOrder(id: number) {
       const indexInStore = this.orders.findIndex((order) => order.id == id);
       this.orders.splice(indexInStore, 1);
+    },
+    logout() {
+      this.whoAmI = {};
     },
   },
 });

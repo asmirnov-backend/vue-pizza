@@ -18,10 +18,17 @@
                 name="test"
                 v-model="cartStore.choosedReceivingOrderEnum"
                 class="select"
+                @change="handleSelectChange"
               >
                 <option value="1">Заберу сам</option>
                 <option value="2">Новый адрес</option>
-                <option value="3">Дом</option>
+                <option
+                  v-for="(address, index) in userStore.getAddresses"
+                  :key="address.id"
+                  :value="3 + index"
+                >
+                  {{ address.name }}
+                </option>
               </select>
             </label>
 
@@ -36,7 +43,7 @@
               />
             </label>
 
-            <CartFormAddress />
+            <CartFormAddress v-if="cartStore.choosedReceivingOrderEnum != 1" />
           </div>
         </div>
       </div>
@@ -71,10 +78,28 @@
 
 <script setup lang="ts">
 import { useCartStore } from "../stores/cart";
+import { useUserStore } from "../stores/user";
 import CartFormAddress from "../modules/cart/CartFormAddress.vue";
 import CartAdditional from "../modules/cart/CartAdditional.vue";
 import CartPizza from "../modules/cart/CartPizza.vue";
 const cartStore = useCartStore();
+const userStore = useUserStore();
+
+const handleSelectChange = (event) => {
+  const selectedValue = event.target.value;
+
+  if (selectedValue == "1") {
+    // Если выбрано "Заберу сам"
+    cartStore.setChoosedAddress(null);
+  } else if (selectedValue === "2") {
+    // Если выбрано "Новый адрес"
+    cartStore.setChoosedAddress({} as any);
+  } else {
+    // Если выбран один из существующих адресов
+    const addressIndex = parseInt(selectedValue) - 3;
+    cartStore.setChoosedAddress(userStore.getAddresses[addressIndex]);
+  }
+};
 </script>
 
 <style lang="scss" scoped>

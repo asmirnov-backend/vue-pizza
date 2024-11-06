@@ -28,7 +28,10 @@
         </picture>
         <span>{{ userStore.getWhoAmI.name }}</span>
       </router-link>
-      <router-link :to="{ name: 'home' }" class="header__logout"
+      <router-link
+        @click="userStore.logout"
+        :to="{ name: 'home' }"
+        class="header__logout"
         ><span>Выйти</span></router-link
       >
     </div>

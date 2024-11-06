@@ -28,6 +28,7 @@ interface ChoosedPizza {
 }
 
 interface ChoosedAddress {
+  id?: number;
   street: string;
   building: string;
   flat: string;
@@ -40,7 +41,7 @@ interface CartState {
   choosedPizzas: ChoosedPizza[];
   choosedReceivingOrderEnum: number;
   choosedPhone: string;
-  choosedAddress: ChoosedAddress;
+  choosedAddress: ChoosedAddress | null;
 }
 
 export const useCartStore = defineStore("cart", {
@@ -106,8 +107,8 @@ export const useCartStore = defineStore("cart", {
     isReadyForOrder(state) {
       return (
         state.choosedPhone &&
-        state.choosedAddress.building &&
-        state.choosedAddress.street &&
+        state.choosedAddress?.building &&
+        state.choosedAddress?.street &&
         this.getPrice > 0
       );
     },
@@ -143,6 +144,9 @@ export const useCartStore = defineStore("cart", {
     },
     setChoosedPhone(phone: string) {
       this.choosedPhone = phone;
+    },
+    setChoosedAddress(address: ChoosedAddress | null) {
+      this.choosedAddress = address;
     },
 
     clearCart() {

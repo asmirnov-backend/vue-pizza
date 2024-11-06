@@ -40,13 +40,9 @@
   </div>
 
   <div class="layout__address">
-    <form
-      action="test.html"
-      method="post"
-      class="address-form address-form--opened sheet"
-    >
+    <form method="post" class="address-form address-form--opened sheet">
       <div class="address-form__header">
-        <b>Адрес №1</b>
+        <b>Новый адрес</b>
       </div>
 
       <div class="address-form__wrapper">
