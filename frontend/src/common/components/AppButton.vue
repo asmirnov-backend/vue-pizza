@@ -24,7 +24,7 @@ defineProps({
   padding: 17px 0;
 
   cursor: pointer;
-  transition: $animationSpeed;
+  // transition: $animationSpeed; todo
   text-align: center;
   text-transform: uppercase;
 
@@ -64,8 +64,8 @@ defineProps({
   }
 
   &--border {
-    color: $blue-gray-600;
-    border: 1px solid $blue-gray-600;
+    color: $blue-600;
+    border: 1px solid $blue-600;
     background-color: $white-900;
 
     &:hover:not(:active) {
@@ -73,7 +73,7 @@ defineProps({
     }
 
     &:active {
-      background-color: $white-700;
+      background-color: $white-800;
     }
   }
 

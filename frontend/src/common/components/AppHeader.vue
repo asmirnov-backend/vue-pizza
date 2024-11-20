@@ -20,7 +20,7 @@
       <router-link :to="{ name: 'user' }">
         <picture>
           <img
-            :src="userStore.getWhoAmI.avatar"
+            :src="getPublicImage(userStore.getWhoAmI.avatar)"
             :alt="userStore.getWhoAmI.name"
             width="32"
             height="32"
@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { useCartStore } from "../../stores/cart";
 import { useUserStore } from "../../stores/user";
+import { getPublicImage } from "../helpers";
 const cartStore = useCartStore();
 const userStore = useUserStore();
 </script>

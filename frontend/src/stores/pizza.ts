@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { MAX_INGREDIENT_COUNT } from "../common/constants";
+import DoughService from "../services/DoughService";
 
 interface Ingredient {
   id: number;
@@ -265,6 +266,10 @@ export const usePizzaStore = defineStore("pizza", {
         .reduce((a, b) => a + b, 0) > 0,
   },
   actions: {
+    async fetchDough() {
+      this.dough = await DoughService.fetch();
+    },
+
     setPizzaForChangeIt(pizza: Choosed) {
       this.choosed = pizza;
     },

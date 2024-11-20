@@ -6,24 +6,106 @@
     <div class="sign-form__title">
       <h1 class="title title--small">Авторизуйтесь на сайте</h1>
     </div>
-    <form action="test.html" method="post">
+    <form @submit.prevent="login">
       <div class="sign-form__input">
         <label class="input">
           <span>E-mail</span>
-          <input type="email" name="email" placeholder="example@mail.ru" />
+          <app-input
+            v-model="email"
+            type="email"
+            name="email"
+            class="input"
+            placeholder="E-mail"
+            :error-text="validations.email.error"
+          />
         </label>
       </div>
 
       <div class="sign-form__input">
         <label class="input">
           <span>Пароль</span>
-          <input type="password" name="pass" placeholder="***********" />
+          <app-input
+            v-model="password"
+            type="password"
+            name="password"
+            class="input"
+            placeholder="Пароль"
+            :error-text="validations.password.error"
+          />
         </label>
       </div>
-      <button type="submit" class="button">Авторизоваться</button>
+      <app-button class="button--primary" type="submit">
+        Авторизоваться
+      </app-button>
+      <!--       Поле ошибок сервера-->
+      <div v-if="serverErrorMessage" class="server-error-message">
+        {{ serverErrorMessage }}
+      </div>
     </form>
   </div>
 </template>
+
+<script setup>
+import { ref, watch } from "vue";
+import AppButton from "../common/components/AppButton.vue";
+import AppInput from "../common/components/AppInput.vue";
+import { validateFields, clearValidationErrors } from "../common/validator";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../stores/user";
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const setEmptyValidations = () => ({
+  email: {
+    error: "",
+    rules: ["required", "email"],
+  },
+  password: {
+    error: "",
+    rules: ["required"],
+  },
+});
+
+const email = ref("");
+const password = ref("");
+const validations = ref(setEmptyValidations());
+const serverErrorMessage = ref(null);
+
+watch(email, () => {
+  // Очищаем поля ошибок при вводе новых данных
+  if (serverErrorMessage.value) serverErrorMessage.value = null;
+  if (validations.value.email.error) clearValidationErrors(validations.value);
+});
+
+watch(password, () => {
+  // Очищаем поля ошибок при вводе новых данных
+  if (serverErrorMessage.value) serverErrorMessage.value = null;
+  if (validations.value.password.error)
+    clearValidationErrors(validations.value);
+});
+
+async function login() {
+  if (
+    !validateFields(
+      { email: email.value, password: password.value },
+      validations.value
+    )
+  ) {
+    return;
+  }
+  const responseMessage = await userStore.login(email.value, password.value);
+  // Проверяем, если возвращается статус не 'ok', то показываем ошибку сервера
+  if (responseMessage !== "ok") {
+    serverErrorMessage.value = responseMessage;
+  } else {
+    // Получаем данные пользователя
+    await userStore.getMe();
+    // Если логин без ошибок, перенаправляем на главную страницу
+    await router.push("/");
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
@@ -59,5 +141,12 @@
 
 .sign-form__input {
   margin-bottom: 16px;
+}
+
+// new
+
+.server-error-message {
+  margin-top: 20px;
+  color: $red-700;
 }
 </style>
