@@ -1,3 +1,5 @@
+import { isAuthenticated } from "../middlewares/isAuthenticated";
+
 export default [
   {
     path: "/",
@@ -31,7 +33,7 @@ export default [
     path: "/user",
     name: "user",
     component: () => import("../views/UserView.vue"),
-    meta: { layout: "AppLayoutSidebar" },
+    meta: { layout: "AppLayoutSidebar", middlewares: [isAuthenticated] },
     children: [
       {
         path: "profile",
