@@ -105,12 +105,7 @@ export const useCartStore = defineStore("cart", {
       return price;
     },
     isReadyForOrder(state) {
-      return (
-        state.choosedPhone &&
-        state.choosedAddress?.building &&
-        state.choosedAddress?.street &&
-        this.getPrice > 0
-      );
+      return state.choosedPhone && this.getPrice > 0;
     },
   },
   actions: {
@@ -150,8 +145,16 @@ export const useCartStore = defineStore("cart", {
     },
 
     clearCart() {
+      this.choosedAddress = {
+        street: "",
+        building: "",
+        flat: "",
+        comment: "",
+      };
+      this.choosedPhone = "";
       this.choosedMiscs = [];
       this.choosedPizzas = [];
+      this.choosedReceivingOrderEnum = 1;
     },
   },
 });

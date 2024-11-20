@@ -21,6 +21,13 @@ export default [
     meta: { layout: "AppLayoutDefault" },
   },
   {
+    path: "/success",
+    name: "success",
+    component: () => import("../views/SuccessView.vue"),
+    children: [],
+    meta: { layout: "AppLayoutDefault" },
+  },
+  {
     path: "/user",
     name: "user",
     component: () => import("../views/UserView.vue"),

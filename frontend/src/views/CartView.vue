@@ -67,6 +67,12 @@
         <button
           type="submit"
           class="button"
+          :onClick="
+            () => {
+              cartStore.clearCart();
+              router.push({ name: 'success' });
+            }
+          "
           :disabled="!cartStore.isReadyForOrder"
         >
           Оформить заказ
@@ -82,6 +88,8 @@ import { useUserStore } from "../stores/user";
 import CartFormAddress from "../modules/cart/CartFormAddress.vue";
 import CartAdditional from "../modules/cart/CartAdditional.vue";
 import CartPizza from "../modules/cart/CartPizza.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const cartStore = useCartStore();
 const userStore = useUserStore();
 
