@@ -64,6 +64,10 @@ export const useUserStore = defineStore("user", {
       },
     ],
   }),
-  getters: {},
+  getters: {
+    getWhoAmI: (state) => state.whoAmI,
+    getAddresses: (state) => state.addresses,
+    getOrders: (state) => state.orders,
+  },
   actions: {},
 });

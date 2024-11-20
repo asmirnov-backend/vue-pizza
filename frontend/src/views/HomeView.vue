@@ -49,10 +49,10 @@ import PizzaNameInput from "../modules/constructor/PizzaNameInput.vue";
 import { ref } from "vue";
 import { Ingredients } from "../modules/constructor/Ingredients";
 
-const doughtValue = ref("");
+const doughtValue = ref(1);
 const diameterEnumValue = ref();
 const pizzaNameValue = ref("");
-const sauceValue = ref("");
+const sauceValue = ref(1);
 const ingredientsValue = ref(new Ingredients());
 </script>
 
