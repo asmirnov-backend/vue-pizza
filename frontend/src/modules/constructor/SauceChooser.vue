@@ -3,7 +3,7 @@
     <p>Основной соус:</p>
 
     <label
-      v-for="sauce in sauces"
+      v-for="sauce in store.getSauces"
       :key="sauce.id"
       class="radio ingredients__input"
     >
@@ -11,8 +11,8 @@
         type="radio"
         name="sauce"
         :value="sauce.id"
-        :checked="modelValue === sauce.id"
-        @input="emit('update:modelValue', $event.target.value)"
+        :checked="store.choosed.sauceId === sauce.id"
+        @input="store.setSauceId($event.target.value)"
       />
       <span>{{ sauce.name }}</span>
     </label>
@@ -20,16 +20,8 @@
 </template>
 
 <script setup>
-import sauces from "@/mocks/sauces.json";
-
-defineProps({
-  modelValue: {
-    type: Number,
-    required: true,
-  },
-});
-
-const emit = defineEmits(["update:modelValue"]);
+import { usePizzaStore } from "../../stores/pizza";
+const store = usePizzaStore();
 </script>
 
 <style lang="scss" scoped>

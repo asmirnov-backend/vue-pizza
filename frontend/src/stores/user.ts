@@ -1,7 +1,75 @@
 import { defineStore } from "pinia";
 
+interface WhoAmI {
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
+  phone: string;
+}
+
+interface Address {
+  id: number;
+  name: string;
+  street: string;
+  building: string;
+  flat: string;
+  comment: string;
+  userId: string;
+}
+
+interface OrderIngredient {
+  id: number;
+  pizzaId: number;
+  ingredientId: number;
+  quantity: number;
+}
+
+interface OrderPizza {
+  id: number;
+  name: string;
+  sauceId: number;
+  doughId: number;
+  sizeId: number;
+  quantity: number;
+  orderId: number;
+  ingredients: OrderIngredient[];
+}
+
+interface OrderMisc {
+  id: number;
+  orderId: number;
+  miscId: number;
+  quantity: number;
+}
+
+interface OrderAddress {
+  id: number;
+  name: string;
+  street: string;
+  building: string;
+  flat: string;
+  comment: string;
+  userId: string;
+}
+
+interface Order {
+  id: number;
+  userId: string;
+  addressId: number;
+  orderPizzas: OrderPizza[];
+  orderMisc: OrderMisc[];
+  orderAddress: OrderAddress;
+}
+
+interface UserState {
+  whoAmI: WhoAmI;
+  addresses: Address[];
+  orders: Order[];
+}
+
 export const useUserStore = defineStore("user", {
-  state: () => ({
+  state: (): UserState => ({
     whoAmI: {
       name: "Вася Пупкин",
       email: "user@example.com",
@@ -69,5 +137,15 @@ export const useUserStore = defineStore("user", {
     getAddresses: (state) => state.addresses,
     getOrders: (state) => state.orders,
   },
-  actions: {},
+  actions: {
+    setWhoAmI(whoAmI: WhoAmI) {
+      this.whoAmI = whoAmI;
+    },
+    setAddresses(addresses: Address[]) {
+      this.addresses = addresses;
+    },
+    setOrders(orders: Order[]) {
+      this.orders = orders;
+    },
+  },
 });

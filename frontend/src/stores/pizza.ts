@@ -1,7 +1,56 @@
 import { defineStore } from "pinia";
 
+interface Ingredient {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+}
+
+interface Dough {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+  price: number;
+}
+
+interface Sauce {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface Size {
+  id: number;
+  name: string;
+  image: string;
+  multiplier: number;
+}
+
+interface ChoosedIngredient {
+  ingredientId: number;
+  quantity: number;
+}
+
+interface Choosed {
+  name: string;
+  sauceId: number;
+  doughId: number;
+  sizeId: number;
+  ingredients: ChoosedIngredient[];
+}
+
+interface PizzaState {
+  ingredients: Ingredient[];
+  dough: Dough[];
+  sauces: Sauce[];
+  sizes: Size[];
+  choosed: Choosed;
+}
+
 export const usePizzaStore = defineStore("pizza", {
-  state: () => ({
+  state: (): PizzaState => ({
     ingredients: [
       {
         id: 1,
@@ -93,96 +142,6 @@ export const usePizzaStore = defineStore("pizza", {
         image: "/public/img/filling/bacon.svg",
         price: 42,
       },
-      {
-        id: 16,
-        name: "Грибы",
-        image: "/public/img/filling/mushrooms.svg",
-        price: 33,
-      },
-      {
-        id: 17,
-        name: "Чеддер",
-        image: "/public/img/filling/cheddar.svg",
-        price: 42,
-      },
-      {
-        id: 18,
-        name: "Томаты",
-        image: "/public/img/filling/tomatoes.svg",
-        price: 35,
-      },
-      {
-        id: 19,
-        name: "Лосось",
-        image: "/public/img/filling/salmon.svg",
-        price: 50,
-      },
-      {
-        id: 20,
-        name: "Моцарелла",
-        image: "/public/img/filling/mozzarella.svg",
-        price: 35,
-      },
-      {
-        id: 21,
-        name: "Пармезан",
-        image: "/public/img/filling/parmesan.svg",
-        price: 35,
-      },
-      {
-        id: 22,
-        name: "Блю чиз",
-        image: "/public/img/filling/blue_cheese.svg",
-        price: 50,
-      },
-      {
-        id: 23,
-        name: "Салями",
-        image: "/public/img/filling/salami.svg",
-        price: 42,
-      },
-      {
-        id: 24,
-        name: "Бекон",
-        image: "/public/img/filling/bacon.svg",
-        price: 42,
-      },
-      {
-        id: 25,
-        name: "Лук",
-        image: "/public/img/filling/onion.svg",
-        price: 21,
-      },
-      {
-        id: 26,
-        name: "Чили",
-        image: "/public/img/filling/chile.svg",
-        price: 21,
-      },
-      {
-        id: 27,
-        name: "Халапеньо",
-        image: "/public/img/filling/jalapeno.svg",
-        price: 25,
-      },
-      {
-        id: 28,
-        name: "Ветчина",
-        image: "/public/img/filling/ham.svg",
-        price: 42,
-      },
-      {
-        id: 29,
-        name: "Ананас",
-        image: "/public/img/filling/ananas.svg",
-        price: 25,
-      },
-      {
-        id: 30,
-        name: "Маслины",
-        image: "/public/img/filling/olives.svg",
-        price: 25,
-      },
     ],
     dough: [
       {
@@ -211,16 +170,6 @@ export const usePizzaStore = defineStore("pizza", {
         name: "Сливочный",
         price: 50,
       },
-      {
-        id: 3,
-        name: "Сливочный",
-        price: 50,
-      },
-      {
-        id: 4,
-        name: "Томатный",
-        price: 50,
-      },
     ],
     sizes: [
       {
@@ -241,46 +190,40 @@ export const usePizzaStore = defineStore("pizza", {
         image: "/public/img/diameter.svg",
         multiplier: 3,
       },
-      {
-        id: 4,
-        name: "23 см",
-        image: "/public/img/diameter.svg",
-        multiplier: 1,
-      },
-      {
-        id: 5,
-        name: "32 см",
-        image: "/public/img/diameter.svg",
-        multiplier: 2,
-      },
-      {
-        id: 6,
-        name: "45 см",
-        image: "/public/img/diameter.svg",
-        multiplier: 3,
-      },
     ],
     choosed: {
       name: "",
       sauceId: 1,
       doughId: 1,
       sizeId: 1,
-      ingredients: Array.from({ length: 30 }, (_, i) => i + 1).map((i) => ({
-        ingredientId: i,
-        quantity: 0,
-      })),
+      ingredients: [],
     },
   }),
   getters: {
+    getSizeName: (state) => (id: number) =>
+      state.sizes.find((e) => e.id == id)?.name,
+    getDoughName: (state) => (id: number) =>
+      state.dough.find((e) => e.id == id)?.name,
+    getSauceName: (state) => (id: number) =>
+      state.sauces.find((e) => e.id == id)?.name,
+    getIngredientName: (state) => (id: number) =>
+      state.ingredients.find((e) => e.id == id)?.name,
+
+    getName: (state) => state.choosed.name,
     getDough: (state) =>
       state.dough.map((e) => ({
         ...e,
-        type: e.image.split("/")[-1].split(".")[0].split("-")[-1],
+        type: e.image.split("/")[3].split(".")[0].split("-")[1],
       })),
+    getIngredientEnName: (state) => (id: number) =>
+      state.ingredients
+        .find((e) => e.id == id)!
+        .image.split("/")[4]
+        .split(".")[0],
     getIngredients: (state) =>
       state.ingredients.map((e) => ({
         ...e,
-        enName: e.image.split("/")[-1].split(".")[0],
+        enName: e.image.split("/")[4].split(".")[0],
       })),
     getSauces: (state) => state.sauces,
     getSizes: (state) => state.sizes,
@@ -305,6 +248,42 @@ export const usePizzaStore = defineStore("pizza", {
 
       return price;
     },
+    isReadyForCooking: (state) =>
+      state.choosed.ingredients.length > 0 && state.choosed.name,
   },
-  actions: {},
+  actions: {
+    setSauceId(id: number) {
+      this.choosed.sauceId = id;
+    },
+    setDoughId(id: number) {
+      this.choosed.doughId = id;
+    },
+    setSizeId(id: number) {
+      this.choosed.sizeId = id;
+    },
+    setIngredientQuantity(ingredientId: number, quantity: number) {
+      const ingredientIndex = this.choosed.ingredients.findIndex(
+        (ingredient: ChoosedIngredient) =>
+          ingredient.ingredientId === ingredientId
+      );
+
+      if (ingredientIndex !== -1) {
+        this.choosed.ingredients[ingredientIndex].quantity = quantity;
+      } else {
+        this.choosed.ingredients.push({ ingredientId, quantity });
+      }
+    },
+    setName(name: string) {
+      this.choosed.name = name;
+    },
+    clearChoosed() {
+      this.choosed = {
+        name: "",
+        sauceId: 1,
+        doughId: 1,
+        sizeId: 1,
+        ingredients: [],
+      };
+    },
+  },
 });
