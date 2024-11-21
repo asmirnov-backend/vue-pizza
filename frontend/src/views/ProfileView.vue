@@ -6,17 +6,17 @@
   <div class="user">
     <picture>
       <img
-        :src="getPublicImage(userStore.getWhoAmI.avatar)"
-        :alt="userStore.getWhoAmI.name"
+        :src="getPublicImage(userStore.getWhoAmI!.avatar)"
+        :alt="userStore.getWhoAmI!.name"
         width="72"
         height="72"
       />
     </picture>
     <div class="user__name">
-      <span>{{ userStore.getWhoAmI.name }}</span>
+      <span>{{ userStore.getWhoAmI!.name }}</span>
     </div>
     <p class="user__phone">
-      Контактный телефон: <span>{{ userStore.getWhoAmI.phone }}</span>
+      Контактный телефон: <span>{{ userStore.getWhoAmI!.phone }}</span>
     </p>
   </div>
 
@@ -121,6 +121,8 @@
 import { useUserStore } from "../stores/user";
 import { getPublicImage } from "../common/helpers";
 const userStore = useUserStore();
+
+userStore.fetchAddresses();
 </script>
 
 <style lang="scss" scoped>

@@ -17,13 +17,19 @@
         <button
           type="button"
           class="button button--border"
-          @click="userStore.removeOrder(order.id)"
+          @click="deleteOrder(order.id)"
         >
           Удалить
         </button>
       </div>
       <div class="order__button">
-        <button type="button" class="button">Повторить</button>
+        <button
+          type="button"
+          class="button"
+          :onClick="() => repeatOrder(order.id)"
+        >
+          Повторить
+        </button>
       </div>
     </div>
 
@@ -49,7 +55,7 @@
 
     <ul class="order__additional">
       <li
-        v-for="mics in order.orderMisc.map((m) => ({
+        v-for="mics in (order.orderMisc ?? []).map((m) => ({
           ...cartStore.getMiscById(m.miscId),
           ...m,
         }))"
@@ -65,11 +71,13 @@
     <p class="order__address">
       Адрес доставки:
       {{
-        [
-          order.orderAddress.street,
-          order.orderAddress.building,
-          order.orderAddress.flat,
-        ].join(", ")
+        order.orderAddress
+          ? [
+              order.orderAddress.street,
+              order.orderAddress.building,
+              order.orderAddress.flat,
+            ].join(", ")
+          : "Заберу сам"
       }}
     </p>
   </section>
@@ -80,17 +88,45 @@ import PizzaProduct from "../common/components/PizzaProduct.vue";
 import { useCartStore } from "../stores/cart";
 import { usePizzaStore } from "../stores/pizza";
 import { Order, useUserStore } from "../stores/user";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const userStore = useUserStore();
 const pizzaStore = usePizzaStore();
 const cartStore = useCartStore();
 
+userStore.fetchOrders();
+cartStore.fetchMisc();
+
+async function deleteOrder(id: number) {
+  await userStore.deleteOrder(id);
+}
+
+async function repeatOrder(id: number) {
+  cartStore.clearCart();
+  pizzaStore.clearChoosed();
+
+  const order = userStore.getOrders.find((e) => e.id === id);
+  cartStore.setChoosedAddress(order?.orderAddress ?? null);
+  cartStore.setChoosedPhone(order?.phone ?? "");
+  cartStore.setChoosedReceivingOrderEnum(order?.addressId ? 3 : 1);
+  for (const pizza of order?.orderPizzas ?? []) {
+    cartStore.addPizza({ ...pizza, price: pizzaStore.getPizzaPrice(pizza) });
+  }
+  for (const mics of order?.orderMisc ?? []) {
+    cartStore.setMiscQuantity(mics.miscId, mics.quantity);
+  }
+
+  router.push({ name: "cart" });
+}
+
 const calcOrderPrice = (order: Order): number => {
   let price = 0;
 
-  price += order.orderPizzas
+  price += (order.orderPizzas ?? [])
     .map((pizza) => pizzaStore.getPizzaPrice(pizza) * pizza.quantity)
     .reduce((a, b) => a + b, 0);
-  price += order.orderMisc
+  price += (order.orderMisc ?? [])
     .map(
       (mics) => (cartStore.getMiscById(mics.miscId)?.price ?? 0) * mics.quantity
     )

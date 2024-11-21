@@ -53,6 +53,10 @@ import { useRouter } from "vue-router";
 const pizzaStore = usePizzaStore();
 const cartStore = useCartStore();
 const router = useRouter();
+pizzaStore.fetchDough();
+pizzaStore.fetchIngredients();
+pizzaStore.fetchSauces();
+pizzaStore.fetchSizes();
 
 function addCurrentPizzaToStoreAndNavToCart() {
   cartStore.addPizza({

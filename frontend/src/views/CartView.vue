@@ -1,5 +1,5 @@
 <template>
-  <form action="test.html" method="post" class="layout-form">
+  <form @submit.prevent="createOrder" class="layout-form">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
@@ -67,12 +67,6 @@
         <button
           type="submit"
           class="button"
-          :onClick="
-            () => {
-              cartStore.clearCart();
-              router.push({ name: 'success' });
-            }
-          "
           :disabled="!cartStore.isReadyForOrder"
         >
           Оформить заказ
@@ -92,6 +86,15 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const cartStore = useCartStore();
 const userStore = useUserStore();
+
+cartStore.fetchMisc();
+userStore.fetchAddresses();
+
+async function createOrder() {
+  await cartStore.createOrder();
+  cartStore.clearCart();
+  router.push({ name: "success" });
+}
 
 const handleSelectChange = (event) => {
   const selectedValue = event.target.value;
