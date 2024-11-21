@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import MiscService from "../services/MiscService";
+import OrderService from "../services/OrderService.ts";
+import { useUserStore } from "./user.ts";
 
 interface Misc {
   id: number;
@@ -46,26 +49,7 @@ interface CartState {
 
 export const useCartStore = defineStore("cart", {
   state: (): CartState => ({
-    misc: [
-      {
-        id: 1,
-        name: "Cola-Cola 0,5 литра",
-        image: "/public/img/cola.svg",
-        price: 56,
-      },
-      {
-        id: 2,
-        name: "Острый соус",
-        image: "/public/img/sauce.svg",
-        price: 10,
-      },
-      {
-        id: 3,
-        name: "Картошка из печи",
-        image: "/public/img/potato.svg",
-        price: 170,
-      },
-    ],
+    misc: [],
     choosedMiscs: [],
     choosedPizzas: [],
     choosedReceivingOrderEnum: 1,
@@ -109,6 +93,32 @@ export const useCartStore = defineStore("cart", {
     },
   },
   actions: {
+    async fetchMisc() {
+      this.misc = await MiscService.fetch();
+    },
+    async createOrder() {
+      const userStore = useUserStore();
+
+      await OrderService.create({
+        userId: userStore.getWhoAmI!.id,
+        phone: this.choosedPhone,
+        address:
+          this.choosedReceivingOrderEnum == 1 ? null : this.choosedAddress,
+        pizzas: this.choosedPizzas.map((e: ChoosedPizza) => ({
+          name: e.name,
+          sauceId: e.sauceId,
+          doughId: e.doughId,
+          sizeId: e.sizeId,
+          quantity: e.quantity,
+          ingredients: e.ingredients.map((ingredient) => ({
+            ingredientId: ingredient.ingredientId,
+            quantity: ingredient.quantity,
+          })),
+        })),
+        misc: this.choosedMiscs,
+      });
+    },
+
     setMiscQuantity(miscId: number, quantity: number) {
       const miscIndex = this.choosedMiscs.findIndex(
         (misc: ChoosedMisc) => misc.miscId === miscId
