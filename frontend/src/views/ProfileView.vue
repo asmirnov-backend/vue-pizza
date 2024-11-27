@@ -6,7 +6,7 @@
   <div class="user">
     <picture>
       <img
-        :src="userStore.getWhoAmI.avatar"
+        :src="getPublicImage(userStore.getWhoAmI.avatar)"
         :alt="userStore.getWhoAmI.name"
         width="72"
         height="72"
@@ -119,6 +119,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
+import { getPublicImage } from "../common/helpers";
 const userStore = useUserStore();
 </script>
 

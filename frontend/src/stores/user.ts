@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
+import AuthService from "../services/AuthService";
+import { removeToken, setToken } from "../services/token-manager";
 
 interface WhoAmI {
   name: string;
   email: string;
-  password: string;
   avatar: string;
   phone: string;
 }
@@ -63,20 +64,14 @@ export interface Order {
 }
 
 interface UserState {
-  whoAmI: WhoAmI;
+  whoAmI: WhoAmI | null;
   addresses: Address[];
   orders: Order[];
 }
 
 export const useUserStore = defineStore("user", {
   state: (): UserState => ({
-    whoAmI: {
-      name: "Вася Пупкин",
-      email: "user@example.com",
-      password: "user@example.com",
-      avatar: "/public/img/users/user5@4x.jpg",
-      phone: "+777 777 777",
-    },
+    whoAmI: null,
     addresses: [
       {
         id: 1,
@@ -284,7 +279,7 @@ export const useUserStore = defineStore("user", {
         fullAddress: [addr.street, addr.building, addr.flat].join(", "),
       })),
     getOrders: (state) => state.orders,
-    isAuthenticated: (state) => Boolean(state.whoAmI.email),
+    isAuthenticated: (state) => Boolean(state.whoAmI?.email),
   },
   actions: {
     setWhoAmI(whoAmI: WhoAmI) {
@@ -300,8 +295,22 @@ export const useUserStore = defineStore("user", {
       const indexInStore = this.orders.findIndex((order) => order.id == id);
       this.orders.splice(indexInStore, 1);
     },
-    logout() {
+    async login(email: string, password: string) {
+      try {
+        const data = await AuthService.login(email, password);
+        setToken(data.token);
+        return "ok";
+      } catch (e) {
+        return e.message;
+      }
+    },
+    async getMe() {
+      this.whoAmI = await AuthService.whoAmI();
+    },
+    async logout(sendRequest = true) {
+      await AuthService.logout();
       this.whoAmI = {};
+      removeToken();
     },
   },
 });
