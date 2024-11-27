@@ -17,7 +17,7 @@
     </div>
 
     <div v-if="userStore.isAuthenticated" class="header__user">
-      <router-link :to="{ name: 'user' }">
+      <router-link :to="{ name: 'profile' }">
         <picture>
           <img
             :src="getPublicImage(userStore.getWhoAmI.avatar)"

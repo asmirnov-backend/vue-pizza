@@ -12,21 +12,21 @@ class AddressService extends HttpClient {
       throw Error(e);
     }
   }
-  async create(data) {
+  async createAddress(data) {
     try {
       return this.post("/", { data });
     } catch (e) {
       throw Error(e);
     }
   }
-  async update(data) {
+  async updateAddress(data) {
     try {
       return this.put(`/${data.id}`, { data });
     } catch (e) {
       throw Error(e);
     }
   }
-  async delete(id) {
+  async deleteAddress(id) {
     try {
       await this.delete(`/${id}`);
     } catch (e) {
