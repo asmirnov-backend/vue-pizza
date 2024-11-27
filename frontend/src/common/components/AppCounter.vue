@@ -17,7 +17,9 @@
     />
     <button
       type="button"
+      :disabled="value >= maxValue"
       class="counter__button counter__button--plus"
+      :class="accent ? 'counter__button--orange' : ''"
       @click="increment"
     >
       <span class="visually-hidden">Больше</span>
@@ -31,7 +33,19 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  maxValue: {
+    type: Number,
+    required: false,
+    default: Number.MAX_SAFE_INTEGER,
+  },
+  accent: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
+
+// TODO добавить props для цвета (оранж) (Можно ещё max добавить)
 
 const emit = defineEmits(["update:value"]);
 

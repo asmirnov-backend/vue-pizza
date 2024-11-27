@@ -9,6 +9,7 @@
           :key="size.id"
           class="diameter__input"
           :class="`diameter__input--${multiplierSizeMap[size.multiplier]}`"
+          :style="{ '--background-image': `url(${size.image})` }"
         >
           <input
             type="radio"
@@ -67,7 +68,7 @@ const store = usePizzaStore();
 
       border-radius: 50%;
       background-color: $green-100;
-      background-image: url("@/assets/img/diameter.svg");
+      background-image: var(--background-image);
       background-repeat: no-repeat;
       background-position: center;
     }

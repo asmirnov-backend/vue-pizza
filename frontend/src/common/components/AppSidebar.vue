@@ -2,18 +2,26 @@
   <div class="layout__sidebar sidebar">
     <router-link
       class="layout__link mt"
-      :class="{ 'layout__link--active': $route.path === '/orders' }"
-      to="/orders"
+      :class="{ 'layout__link--active': routeName === 'orders' }"
+      :to="{ name: 'orders' }"
       >История заказов</router-link
     >
     <router-link
       class="layout__link"
-      :class="{ 'layout__link--active': $route.path === '/user' }"
-      to="/user"
+      :class="{ 'layout__link--active': routeName === 'profile' }"
+      :to="{ name: 'profile' }"
       >Мои данные</router-link
     >
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const routeName = computed(() => route.name);
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
@@ -53,7 +61,7 @@
 }
 
 .layout__sidebar {
-  position: fixed;
+  position: absolute;
   z-index: 2;
   top: 60px;
   left: 0;

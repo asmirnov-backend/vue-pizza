@@ -7,7 +7,7 @@
           v-for="dough in store.getDough"
           :key="dough.id"
           class="dough__input"
-          :class="`dough__input--${dough.type}`"
+          :style="{ '--background-image': `url(${dough.image})` }"
         >
           <input
             type="radio"
@@ -67,19 +67,9 @@ const store = usePizzaStore();
     display: block;
   }
 
-  &--light {
-    b {
-      &::before {
-        background-image: url("@/assets/img/dough-light.svg");
-      }
-    }
-  }
-
-  &--large {
-    b {
-      &::before {
-        background-image: url("@/assets/img/dough-large.svg");
-      }
+  b {
+    &::before {
+      background-image: var(--background-image);
     }
   }
 

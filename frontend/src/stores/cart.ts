@@ -28,6 +28,7 @@ interface ChoosedPizza {
 }
 
 interface ChoosedAddress {
+  id?: number;
   street: string;
   building: string;
   flat: string;
@@ -40,7 +41,7 @@ interface CartState {
   choosedPizzas: ChoosedPizza[];
   choosedReceivingOrderEnum: number;
   choosedPhone: string;
-  choosedAddress: ChoosedAddress;
+  choosedAddress: ChoosedAddress | null;
 }
 
 export const useCartStore = defineStore("cart", {
@@ -78,6 +79,7 @@ export const useCartStore = defineStore("cart", {
   }),
   getters: {
     getMisc: (state) => state.misc,
+    getMiscById: (state) => (id: number) => state.misc.find((e) => e.id == id),
     getChoosedPizzas: (state) => state.choosedPizzas,
     getChoosedMiscs: (state) =>
       state.misc.map((e) => ({
@@ -103,13 +105,7 @@ export const useCartStore = defineStore("cart", {
       return price;
     },
     isReadyForOrder(state) {
-      return (
-        state.choosedPhone &&
-        state.choosedAddress.building &&
-        state.choosedAddress.flat &&
-        state.choosedAddress.street &&
-        this.getPrice > 0
-      );
+      return state.choosedPhone && this.getPrice > 0;
     },
   },
   actions: {
@@ -144,10 +140,21 @@ export const useCartStore = defineStore("cart", {
     setChoosedPhone(phone: string) {
       this.choosedPhone = phone;
     },
+    setChoosedAddress(address: ChoosedAddress | null) {
+      this.choosedAddress = address;
+    },
 
     clearCart() {
+      this.choosedAddress = {
+        street: "",
+        building: "",
+        flat: "",
+        comment: "",
+      };
+      this.choosedPhone = "";
       this.choosedMiscs = [];
       this.choosedPizzas = [];
+      this.choosedReceivingOrderEnum = 1;
     },
   },
 });
