@@ -27,8 +27,8 @@
             <button
               type="button"
               class="button"
-              @click="addCurrentPizzaToStoreAndNavToCart"
               :disabled="!pizzaStore.isReadyForCooking"
+              @click="addCurrentPizzaToStoreAndNavToCart"
             >
               Готовьте!
             </button>

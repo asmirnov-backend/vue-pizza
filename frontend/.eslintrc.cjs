@@ -13,7 +13,7 @@ module.exports = {
   },
   parserOptions: {
     parser: "@babel/eslint-parser",
-    requireConfigFile: false, // <== ADD THIS
+    requireConfigFile: false,
   },
   rules: { "no-unused-vars": 1 },
 };

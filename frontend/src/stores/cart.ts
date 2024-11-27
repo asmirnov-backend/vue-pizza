@@ -44,7 +44,7 @@ interface CartState {
   choosedPizzas: ChoosedPizza[];
   choosedReceivingOrderEnum: number;
   choosedPhone: string;
-  choosedAddress: ChoosedAddress | null;
+  choosedAddress: ChoosedAddress;
 }
 
 export const useCartStore = defineStore("cart", {
@@ -145,7 +145,23 @@ export const useCartStore = defineStore("cart", {
     },
 
     setChoosedReceivingOrderEnum(index: number | string) {
-      this.choosedReceivingOrderEnum = Number(index);
+      const userStore = useUserStore();
+      const numberIndex = Number(index);
+
+      if (numberIndex == 1) {
+        // Если выбрано "Заберу сам"
+        this.setChoosedAddress(null);
+        this.choosedReceivingOrderEnum = 1;
+      } else if (numberIndex === 2) {
+        // Если выбрано "Новый адрес"
+        this.setChoosedAddress({} as any);
+        this.choosedReceivingOrderEnum = 2;
+      } else {
+        // Если выбран один из существующих адресов
+        const addressIndex = numberIndex - 3;
+        this.setChoosedAddress(userStore.getAddresses[addressIndex]);
+        this.choosedReceivingOrderEnum = 3;
+      }
     },
     setChoosedPhone(phone: string) {
       this.choosedPhone = phone;

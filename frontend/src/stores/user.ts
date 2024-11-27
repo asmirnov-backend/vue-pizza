@@ -3,6 +3,8 @@ import AuthService from "../services/AuthService";
 import { removeToken, setToken } from "../services/token-manager";
 import AddressService from "../services/AddressService";
 import OrderService from "../services/OrderService.ts";
+import { useCartStore } from "./cart.ts";
+import { usePizzaStore } from "./pizza.ts";
 
 interface WhoAmI {
   id: string;
@@ -110,6 +112,54 @@ export const useUserStore = defineStore("user", {
     },
     setOrders(orders: Order[]) {
       this.orders = orders;
+    },
+
+    repeatOrder(id: number) {
+      const pizzaStore = usePizzaStore();
+      const cartStore = useCartStore();
+
+      cartStore.clearCart();
+      pizzaStore.clearChoosed();
+
+      const order = this.getOrders.find((e) => e.id === id);
+      cartStore.setChoosedAddress(
+        order?.orderAddress ?? {
+          street: "",
+          building: "",
+          flat: "",
+          comment: "",
+        }
+      );
+      cartStore.setChoosedPhone(order?.phone ?? "");
+      cartStore.setChoosedReceivingOrderEnum(order?.addressId ? 3 : 1);
+      for (const pizza of order?.orderPizzas ?? []) {
+        cartStore.addPizza({
+          ...pizza,
+          price: pizzaStore.getPizzaPrice(pizza),
+        });
+      }
+      for (const mics of order?.orderMisc ?? []) {
+        cartStore.setMiscQuantity(mics.miscId, mics.quantity);
+      }
+    },
+
+    calcOrderPrice(order: Order) {
+      const pizzaStore = usePizzaStore();
+      const cartStore = useCartStore();
+
+      let price = 0;
+
+      price += (order.orderPizzas ?? [])
+        .map((pizza) => pizzaStore.getPizzaPrice(pizza) * pizza.quantity)
+        .reduce((a, b) => a + b, 0);
+      price += (order.orderMisc ?? [])
+        .map(
+          (mics) =>
+            (cartStore.getMiscById(mics.miscId)?.price ?? 0) * mics.quantity
+        )
+        .reduce((a, b) => a + b, 0);
+
+      return price;
     },
 
     async login(email: string, password: string) {

@@ -3,21 +3,25 @@
     <h1 class="title title--big">История заказов</h1>
   </div>
 
-  <section v-for="order in userStore.getOrders" class="sheet order">
+  <section
+    v-for="order in userStore.getOrders"
+    :key="order.id"
+    class="sheet order"
+  >
     <div class="order__wrapper">
       <div class="order__number">
         <b>Заказ №{{ order.id }}</b>
       </div>
 
       <div class="order__sum">
-        <span>Сумма заказа: {{ calcOrderPrice(order) }} ₽</span>
+        <span>Сумма заказа: {{ userStore.calcOrderPrice(order) }} ₽</span>
       </div>
 
       <div class="order__button">
         <button
           type="button"
           class="button button--border"
-          @click="deleteOrder(order.id)"
+          @click="userStore.deleteOrder(order.id)"
         >
           Удалить
         </button>
@@ -34,7 +38,11 @@
     </div>
 
     <ul class="order__list">
-      <li v-for="pizza in order.orderPizzas" class="order__item">
+      <li
+        v-for="pizza in order.orderPizzas"
+        :key="pizza.id"
+        class="order__item"
+      >
         <div class="product">
           <PizzaProduct
             :name="pizza.name"
@@ -59,6 +67,7 @@
           ...cartStore.getMiscById(m.miscId),
           ...m,
         }))"
+        :key="mics.id"
       >
         <img :src="mics.image" width="20" height="30" :alt="mics.name" />
         <p>
@@ -87,7 +96,7 @@
 import PizzaProduct from "../common/components/PizzaProduct.vue";
 import { useCartStore } from "../stores/cart";
 import { usePizzaStore } from "../stores/pizza";
-import { Order, useUserStore } from "../stores/user";
+import { useUserStore } from "../stores/user";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -98,42 +107,10 @@ const cartStore = useCartStore();
 userStore.fetchOrders();
 cartStore.fetchMisc();
 
-async function deleteOrder(id: number) {
-  await userStore.deleteOrder(id);
-}
-
-async function repeatOrder(id: number) {
-  cartStore.clearCart();
-  pizzaStore.clearChoosed();
-
-  const order = userStore.getOrders.find((e) => e.id === id);
-  cartStore.setChoosedAddress(order?.orderAddress ?? null);
-  cartStore.setChoosedPhone(order?.phone ?? "");
-  cartStore.setChoosedReceivingOrderEnum(order?.addressId ? 3 : 1);
-  for (const pizza of order?.orderPizzas ?? []) {
-    cartStore.addPizza({ ...pizza, price: pizzaStore.getPizzaPrice(pizza) });
-  }
-  for (const mics of order?.orderMisc ?? []) {
-    cartStore.setMiscQuantity(mics.miscId, mics.quantity);
-  }
-
+function repeatOrder(id) {
+  userStore.repeatOrder(id);
   router.push({ name: "cart" });
 }
-
-const calcOrderPrice = (order: Order): number => {
-  let price = 0;
-
-  price += (order.orderPizzas ?? [])
-    .map((pizza) => pizzaStore.getPizzaPrice(pizza) * pizza.quantity)
-    .reduce((a, b) => a + b, 0);
-  price += (order.orderMisc ?? [])
-    .map(
-      (mics) => (cartStore.getMiscById(mics.miscId)?.price ?? 0) * mics.quantity
-    )
-    .reduce((a, b) => a + b, 0);
-
-  return price;
-};
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="createOrder" class="layout-form">
+  <form class="layout-form" @submit.prevent="createOrder">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
@@ -15,8 +15,8 @@
               <span class="cart-form__label">Получение заказа:</span>
 
               <select
-                name="test"
                 v-model="cartStore.choosedReceivingOrderEnum"
+                name="test"
                 class="select"
                 @change="handleSelectChange"
               >
@@ -37,9 +37,9 @@
               <input
                 type="text"
                 :value="cartStore.choosedPhone"
-                @input="cartStore.setChoosedPhone($event.target.value)"
                 name="tel"
                 placeholder="+7 999-999-99-99"
+                @input="cartStore.setChoosedPhone($event.target.value)"
               />
             </label>
 
@@ -98,18 +98,7 @@ async function createOrder() {
 
 const handleSelectChange = (event) => {
   const selectedValue = event.target.value;
-
-  if (selectedValue == "1") {
-    // Если выбрано "Заберу сам"
-    cartStore.setChoosedAddress(null);
-  } else if (selectedValue === "2") {
-    // Если выбрано "Новый адрес"
-    cartStore.setChoosedAddress({} as any);
-  } else {
-    // Если выбран один из существующих адресов
-    const addressIndex = parseInt(selectedValue) - 3;
-    cartStore.setChoosedAddress(userStore.getAddresses[addressIndex]);
-  }
+  cartStore.setChoosedReceivingOrderEnum(selectedValue);
 };
 </script>
 
