@@ -179,5 +179,25 @@ export const useUserStore = defineStore("user", {
       this.whoAmI = {};
       removeToken();
     },
+
+    async addAddress(address) {
+      const res = await AddressService.createAddress({
+        ...address,
+        userId: this.whoAmI.id,
+      });
+      if (res.id != undefined) {
+        this.addresses.push(res);
+      }
+    },
+    async removeAddress(addressId) {
+      const res = await AddressService.deleteAddress(addressId);
+      this.addresses = this.addresses.filter((i) => i.id !== addressId);
+    },
+    async updateAddress(address) {
+      const res = await AddressService.updateAddress(address);
+      this.addresses = this.addresses.map((i) =>
+        i.id === address.id ? address : i
+      );
+    },
   },
 });

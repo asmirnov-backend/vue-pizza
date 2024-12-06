@@ -28,7 +28,7 @@ class AddressService extends HttpClient {
   }
   async deleteAddress(id) {
     try {
-      await this.delete(`/${id}`);
+      return await this.delete(`/${id}`);
     } catch (e) {
       throw Error(e);
     }
