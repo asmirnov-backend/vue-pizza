@@ -103,7 +103,14 @@ export const useCartStore = defineStore("cart", {
         userId: userStore.getWhoAmI!.id,
         phone: this.choosedPhone,
         address:
-          this.choosedReceivingOrderEnum == 1 ? null : this.choosedAddress,
+          this.choosedReceivingOrderEnum == 1
+            ? null
+            : {
+                street: this.choosedAddress.street,
+                building: this.choosedAddress.building,
+                flat: this.choosedAddress?.flat,
+                comment: this.choosedAddress?.comment,
+              },
         pizzas: this.choosedPizzas.map((e: ChoosedPizza) => ({
           name: e.name,
           sauceId: e.sauceId,

@@ -83,11 +83,7 @@ export const useUserStore = defineStore("user", {
   }),
   getters: {
     getWhoAmI: (state) => state.whoAmI,
-    getAddresses: (state) =>
-      state.addresses.map((addr) => ({
-        ...addr,
-        fullAddress: [addr.street, addr.building, addr.flat].join(", "),
-      })),
+    getAddresses: (state) => state.addresses,
     getOrders: (state) => state.orders,
     isAuthenticated: (state) => Boolean(state.whoAmI?.email),
   },

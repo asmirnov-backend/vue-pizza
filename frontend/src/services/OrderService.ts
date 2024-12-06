@@ -33,7 +33,7 @@ interface Misc {
 interface Order {
   userId: string;
   phone: string;
-  address: Address;
+  address: Address | null;
   pizzas: Pizza[];
   misc: Misc[];
 }
