@@ -52,7 +52,7 @@ export const useCartStore = defineStore("cart", {
     misc: [],
     choosedMiscs: [],
     choosedPizzas: [],
-    choosedReceivingOrderEnum: 1,
+    choosedReceivingOrderEnum: -2,
     choosedPhone: "",
     choosedAddress: {
       street: "",
@@ -100,10 +100,10 @@ export const useCartStore = defineStore("cart", {
       const userStore = useUserStore();
 
       await OrderService.create({
-        userId: userStore.getWhoAmI!.id,
+        userId: userStore.getWhoAmI?.id ?? null,
         phone: this.choosedPhone,
         address:
-          this.choosedReceivingOrderEnum == 1
+          this.choosedReceivingOrderEnum == -2
             ? null
             : {
                 street: this.choosedAddress.street,
@@ -138,7 +138,11 @@ export const useCartStore = defineStore("cart", {
       }
     },
     setPizzaQuantity(pizzaIndex: number, quantity: number) {
-      this.choosedPizzas[pizzaIndex].quantity = quantity;
+      if (quantity == 0) {
+        this.choosedPizzas.splice(pizzaIndex, 1);
+      } else {
+        this.choosedPizzas[pizzaIndex].quantity = quantity;
+      }
     },
 
     addPizza(pizza: ChoosedPizza) {
@@ -155,19 +159,19 @@ export const useCartStore = defineStore("cart", {
       const userStore = useUserStore();
       const numberIndex = Number(index);
 
-      if (numberIndex == 1) {
+      if (numberIndex == -2) {
         // Если выбрано "Заберу сам"
         this.setChoosedAddress(null);
-        this.choosedReceivingOrderEnum = 1;
-      } else if (numberIndex === 2) {
+        this.choosedReceivingOrderEnum = -2;
+      } else if (numberIndex === -1) {
         // Если выбрано "Новый адрес"
         this.setChoosedAddress({} as any);
-        this.choosedReceivingOrderEnum = 2;
+        this.choosedReceivingOrderEnum = -1;
       } else {
         // Если выбран один из существующих адресов
-        const addressIndex = numberIndex - 3;
-        this.setChoosedAddress(userStore.getAddresses[addressIndex]);
-        this.choosedReceivingOrderEnum = 3;
+        const addressId = numberIndex;
+        this.setChoosedAddress(userStore.getAddressesById(addressId));
+        this.choosedReceivingOrderEnum = addressId;
       }
     },
     setChoosedPhone(phone: string) {
@@ -187,7 +191,7 @@ export const useCartStore = defineStore("cart", {
       this.choosedPhone = "";
       this.choosedMiscs = [];
       this.choosedPizzas = [];
-      this.choosedReceivingOrderEnum = 1;
+      this.choosedReceivingOrderEnum = -2;
     },
   },
 });

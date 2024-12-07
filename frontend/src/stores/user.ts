@@ -84,6 +84,8 @@ export const useUserStore = defineStore("user", {
   getters: {
     getWhoAmI: (state) => state.whoAmI,
     getAddresses: (state) => state.addresses,
+    getAddressesById: (state) => (addressId) =>
+      state.addresses.find((a) => a.id == addressId),
     getOrders: (state) => state.orders,
     isAuthenticated: (state) => Boolean(state.whoAmI?.email),
   },
@@ -127,7 +129,9 @@ export const useUserStore = defineStore("user", {
         }
       );
       cartStore.setChoosedPhone(order?.phone ?? "");
-      cartStore.setChoosedReceivingOrderEnum(order?.addressId ? 3 : 1);
+      cartStore.setChoosedReceivingOrderEnum(
+        order?.addressId ? order?.addressId : -2
+      );
       for (const pizza of order?.orderPizzas ?? []) {
         cartStore.addPizza({
           ...pizza,

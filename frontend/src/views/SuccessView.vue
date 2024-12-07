@@ -8,12 +8,19 @@
     </div>
     <p>Мы начали готовить Ваш заказ, скоро привезём его вам ;)</p>
     <div class="popup__button">
-      <router-link :to="{ name: 'orders' }" class="button"
+      <router-link
+        :to="userStore.isAuthenticated ? { name: 'orders' } : { name: 'home' }"
+        class="button"
         >Отлично, я жду!</router-link
       >
     </div>
   </div>
 </template>
+
+<script setup>
+import { useUserStore } from "../stores/user";
+const userStore = useUserStore();
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";

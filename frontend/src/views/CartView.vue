@@ -27,12 +27,12 @@
                   class="select"
                   @change="handleSelectChange"
                 >
-                  <option value="1">Заберу сам</option>
-                  <option value="2">Новый адрес</option>
+                  <option :value="-2">Заберу сам</option>
+                  <option :value="-1">Новый адрес</option>
                   <option
-                    v-for="(address, index) in userStore.getAddresses"
+                    v-for="address in userStore.getAddresses"
                     :key="address.id"
-                    :value="3 + index"
+                    :value="address.id"
                   >
                     {{
                       address.name.length > 25
@@ -55,7 +55,7 @@
               </label>
 
               <CartFormAddress
-                v-if="cartStore.choosedReceivingOrderEnum != 1"
+                v-if="cartStore.choosedReceivingOrderEnum != -2"
               />
             </div>
           </div>

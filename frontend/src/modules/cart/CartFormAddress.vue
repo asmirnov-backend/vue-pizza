@@ -7,7 +7,7 @@
         <span>Улица*</span>
         <input
           v-model="cartStore.choosedAddress.street"
-          :readonly="cartStore.choosedReceivingOrderEnum != 2"
+          :readonly="cartStore.choosedReceivingOrderEnum != -1"
           type="text"
           name="street"
         />
@@ -19,7 +19,7 @@
         <span>Дом*</span>
         <input
           v-model="cartStore.choosedAddress.building"
-          :readonly="cartStore.choosedReceivingOrderEnum != 2"
+          :readonly="cartStore.choosedReceivingOrderEnum != -1"
           type="text"
           name="house"
         />
@@ -31,7 +31,7 @@
         <span>Квартира</span>
         <input
           v-model="cartStore.choosedAddress.flat"
-          :readonly="cartStore.choosedReceivingOrderEnum != 2"
+          :readonly="cartStore.choosedReceivingOrderEnum != -1"
           type="text"
           name="apartment"
         />

@@ -31,7 +31,7 @@ interface Misc {
 }
 
 interface Order {
-  userId: string;
+  userId: string | null;
   phone: string;
   address: Address | null;
   pizzas: Pizza[];
