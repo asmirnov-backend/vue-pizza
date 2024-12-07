@@ -6,44 +6,58 @@
           <h1 class="title title--big">Корзина</h1>
         </div>
 
-        <CartPizza />
-        <CartAdditional />
+        <div
+          v-if="cartStore.choosedPizzas.length == 0"
+          class="sheet cart__empty"
+        >
+          <p>В корзине нет ни одного товара</p>
+        </div>
 
-        <div class="cart__form">
-          <div class="cart-form">
-            <label class="cart-form__select">
-              <span class="cart-form__label">Получение заказа:</span>
+        <div v-else>
+          <CartPizza />
+          <CartAdditional />
+          <div class="cart__form">
+            <div class="cart-form">
+              <label class="cart-form__select">
+                <span class="cart-form__label">Получение заказа:</span>
 
-              <select
-                v-model="cartStore.choosedReceivingOrderEnum"
-                name="test"
-                class="select"
-                @change="handleSelectChange"
-              >
-                <option value="1">Заберу сам</option>
-                <option value="2">Новый адрес</option>
-                <option
-                  v-for="(address, index) in userStore.getAddresses"
-                  :key="address.id"
-                  :value="3 + index"
+                <select
+                  v-model="cartStore.choosedReceivingOrderEnum"
+                  name="test"
+                  class="select"
+                  @change="handleSelectChange"
                 >
-                  {{ address.name }}
-                </option>
-              </select>
-            </label>
+                  <option value="1">Заберу сам</option>
+                  <option value="2">Новый адрес</option>
+                  <option
+                    v-for="(address, index) in userStore.getAddresses"
+                    :key="address.id"
+                    :value="3 + index"
+                  >
+                    {{
+                      address.name.length > 25
+                        ? address.name?.substring(0, 22) + "..."
+                        : address.name
+                    }}
+                  </option>
+                </select>
+              </label>
 
-            <label class="input input--big-label">
-              <span>Контактный телефон:</span>
-              <input
-                type="text"
-                :value="cartStore.choosedPhone"
-                name="tel"
-                placeholder="+7 999-999-99-99"
-                @input="cartStore.setChoosedPhone($event.target.value)"
+              <label class="input input--big-label">
+                <span>Контактный телефон:</span>
+                <input
+                  type="text"
+                  :value="cartStore.choosedPhone"
+                  name="tel"
+                  placeholder="+7 999-999-99-99"
+                  @input="cartStore.setChoosedPhone($event.target.value)"
+                />
+              </label>
+
+              <CartFormAddress
+                v-if="cartStore.choosedReceivingOrderEnum != 1"
               />
-            </label>
-
-            <CartFormAddress v-if="cartStore.choosedReceivingOrderEnum != 1" />
+            </div>
           </div>
         </div>
       </div>
@@ -104,6 +118,10 @@ const handleSelectChange = (event) => {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
+
+.cart__empty {
+  padding: 20px 30px;
+}
 
 // footer
 .footer {
