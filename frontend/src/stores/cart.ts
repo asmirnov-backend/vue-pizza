@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import MiscService from "../services/MiscService";
 import OrderService from "../services/OrderService.ts";
 import { useUserStore } from "./user.ts";
+import { removeDuplicatesByName } from "../common/removeDuplicatesByName.js";
 
 interface Misc {
   id: number;
@@ -94,7 +95,7 @@ export const useCartStore = defineStore("cart", {
   },
   actions: {
     async fetchMisc() {
-      this.misc = await MiscService.fetch();
+      this.misc = removeDuplicatesByName(await MiscService.fetch());
     },
     async createOrder() {
       const userStore = useUserStore();
