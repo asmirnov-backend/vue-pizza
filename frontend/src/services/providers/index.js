@@ -1,14 +1,13 @@
 import AxiosProvider from "./AxiosProvider";
-// import { useUserStore } from "../../stores/user";
+import { useUserStore } from "../../stores/user";
 
 export const httpProvider = new AxiosProvider();
 httpProvider.addInterceptor({
   onError: async (status) => {
     // Если с сервиса приходит ошибка 401 Unauthorized, выполняем выход из системы
     if (status === 401) {
-      // todo remove circul import
-      //   const authStore = useUserStore();
-      //   if (authStore.isAuthenticated) await authStore.logout();
+      const authStore = useUserStore();
+      if (authStore.isAuthenticated) await authStore.logout();
     }
   },
 });

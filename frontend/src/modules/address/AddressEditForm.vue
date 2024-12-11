@@ -159,6 +159,7 @@ const save = () => {
 
   button {
     margin-left: 16px;
+    margin-bottom: 16px;
     padding: 16px 27px;
   }
 }

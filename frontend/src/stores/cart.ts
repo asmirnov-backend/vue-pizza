@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import MiscService from "../services/MiscService";
 import OrderService from "../services/OrderService.ts";
 import { useUserStore } from "./user.ts";
+import { removeDuplicatesByName } from "../common/removeDuplicatesByName.js";
+import { usePizzaStore } from "./pizza.ts";
 
 interface Misc {
   id: number;
@@ -94,10 +96,11 @@ export const useCartStore = defineStore("cart", {
   },
   actions: {
     async fetchMisc() {
-      this.misc = await MiscService.fetch();
+      this.misc = removeDuplicatesByName(await MiscService.fetch());
     },
     async createOrder() {
       const userStore = useUserStore();
+      const pizzaStore = usePizzaStore();
 
       await OrderService.create({
         userId: userStore.getWhoAmI?.id ?? null,
@@ -124,6 +127,9 @@ export const useCartStore = defineStore("cart", {
         })),
         misc: this.choosedMiscs,
       });
+
+      this.clearCart();
+      pizzaStore.clearChoosed();
     },
 
     setMiscQuantity(miscId: number, quantity: number) {
@@ -140,6 +146,9 @@ export const useCartStore = defineStore("cart", {
     setPizzaQuantity(pizzaIndex: number, quantity: number) {
       if (quantity == 0) {
         this.choosedPizzas.splice(pizzaIndex, 1);
+        if (this.choosedPizzas?.length == 0) {
+          this.clearCart();
+        }
       } else {
         this.choosedPizzas[pizzaIndex].quantity = quantity;
       }
@@ -170,7 +179,13 @@ export const useCartStore = defineStore("cart", {
       } else {
         // Если выбран один из существующих адресов
         const addressId = numberIndex;
-        this.setChoosedAddress(userStore.getAddressesById(addressId));
+        const address = userStore.getAddressesById(addressId);
+        this.setChoosedAddress({
+          street: address?.street ?? "",
+          building: address?.building ?? "",
+          flat: address?.flat ?? "",
+          comment: address?.comment ?? "",
+        });
         this.choosedReceivingOrderEnum = addressId;
       }
     },

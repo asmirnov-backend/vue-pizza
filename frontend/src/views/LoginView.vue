@@ -73,13 +73,11 @@ const validations = ref(setEmptyValidations());
 const serverErrorMessage = ref(null);
 
 watch(email, () => {
-  // Очищаем поля ошибок при вводе новых данных
   if (serverErrorMessage.value) serverErrorMessage.value = null;
   if (validations.value.email.error) clearValidationErrors(validations.value);
 });
 
 watch(password, () => {
-  // Очищаем поля ошибок при вводе новых данных
   if (serverErrorMessage.value) serverErrorMessage.value = null;
   if (validations.value.password.error)
     clearValidationErrors(validations.value);
@@ -95,13 +93,11 @@ async function login() {
     return;
   }
   const responseMessage = await userStore.login(email.value, password.value);
-  // Проверяем, если возвращается статус не 'ok', то показываем ошибку сервера
+
   if (responseMessage !== "ok") {
     serverErrorMessage.value = responseMessage;
   } else {
-    // Получаем данные пользователя
     await userStore.getMe();
-    // Если логин без ошибок, перенаправляем на главную страницу
     await router.push({ name: "home" });
   }
 }

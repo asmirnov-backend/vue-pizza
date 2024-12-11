@@ -8,12 +8,17 @@
         }-${store.choosed.sauceId == 1 ? 'tomato' : 'creamy'}`"
       >
         <div class="pizza__wrapper">
-          <div
-            v-for="ingredient in store.choosed.ingredients"
-            :key="ingredient.ingredientId"
-            class="pizza__filling"
-            :class="getIngredientClass(ingredient)"
-          ></div>
+          <transition-group
+            name="scale"
+            enter-active-class="animate__animated animate__fadeIn"
+          >
+            <div
+              v-for="ingredient in store.choosed.ingredients"
+              :key="ingredient.ingredientId"
+              class="pizza__filling"
+              :class="getIngredientClass(ingredient)"
+            />
+          </transition-group>
         </div>
       </div>
     </div>

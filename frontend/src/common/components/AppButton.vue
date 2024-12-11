@@ -24,7 +24,6 @@ defineProps({
   padding: 17px 0;
 
   cursor: pointer;
-  // transition: $animationSpeed; todo
   text-align: center;
   text-transform: uppercase;
 
