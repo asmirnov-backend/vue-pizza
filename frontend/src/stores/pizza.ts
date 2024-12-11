@@ -4,6 +4,7 @@ import DoughService from "../services/DoughService";
 import IngredientService from "../services/IngredientService";
 import SauceService from "../services/SauceService";
 import SizeService from "../services/SizeService";
+import { removeDuplicatesByName } from "../common/removeDuplicatesByName";
 
 interface Ingredient {
   id: number;
@@ -134,16 +135,18 @@ export const usePizzaStore = defineStore("pizza", {
   },
   actions: {
     async fetchDough() {
-      this.dough = await DoughService.fetch();
+      this.dough = removeDuplicatesByName(await DoughService.fetch());
     },
     async fetchIngredients() {
-      this.ingredients = await IngredientService.fetch();
+      this.ingredients = removeDuplicatesByName(
+        await IngredientService.fetch()
+      );
     },
     async fetchSauces() {
-      this.sauces = await SauceService.fetch();
+      this.sauces = removeDuplicatesByName(await SauceService.fetch());
     },
     async fetchSizes() {
-      this.sizes = await SizeService.fetch();
+      this.sizes = removeDuplicatesByName(await SizeService.fetch());
     },
 
     setPizzaForChangeIt(pizza: Choosed) {
