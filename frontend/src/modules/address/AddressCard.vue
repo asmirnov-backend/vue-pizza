@@ -2,7 +2,7 @@
   <div class="layout__address">
     <div v-if="!editMode" class="sheet address-form">
       <div class="address-form__header">
-        <b>{{ address.name }}</b>
+        <b>Адрес №{{ address.id }}</b>
         <div class="address-form__edit">
           <button type="button" class="icon" @click="editMode = true">
             <span class="visually-hidden"> Изменить адрес </span>

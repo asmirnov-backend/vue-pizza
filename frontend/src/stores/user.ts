@@ -125,7 +125,7 @@ export const useUserStore = defineStore("user", {
 
       const order = this.getOrders.find((e) => e.id === id);
       cartStore.setChoosedReceivingOrderEnum(
-        order?.addressId ? order?.addressId : -2
+        order?.orderAddress && order?.addressId ? order?.addressId : -2
       );
       cartStore.setChoosedAddress({
         street: order?.orderAddress?.street ?? "",
