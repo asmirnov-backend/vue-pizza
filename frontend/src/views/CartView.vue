@@ -1,49 +1,63 @@
 <template>
-  <form action="test.html" method="post" class="layout-form">
+  <form class="layout-form" @submit.prevent="createOrder">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
           <h1 class="title title--big">Корзина</h1>
         </div>
 
-        <CartPizza />
-        <CartAdditional />
+        <div
+          v-if="cartStore.choosedPizzas.length == 0"
+          class="sheet cart__empty"
+        >
+          <p>В корзине нет ни одного товара</p>
+        </div>
 
-        <div class="cart__form">
-          <div class="cart-form">
-            <label class="cart-form__select">
-              <span class="cart-form__label">Получение заказа:</span>
+        <div v-else>
+          <CartPizza />
+          <CartAdditional />
+          <div class="cart__form">
+            <div class="cart-form">
+              <label class="cart-form__select">
+                <span class="cart-form__label">Получение заказа:</span>
 
-              <select
-                name="test"
-                v-model="cartStore.choosedReceivingOrderEnum"
-                class="select"
-                @change="handleSelectChange"
-              >
-                <option value="1">Заберу сам</option>
-                <option value="2">Новый адрес</option>
-                <option
-                  v-for="(address, index) in userStore.getAddresses"
-                  :key="address.id"
-                  :value="3 + index"
+                <select
+                  v-model="cartStore.choosedReceivingOrderEnum"
+                  name="test"
+                  class="select"
+                  @change="handleSelectChange"
                 >
-                  {{ address.name }}
-                </option>
-              </select>
-            </label>
+                  <option :value="-2">Заберу сам</option>
+                  <option :value="-1">Новый адрес</option>
+                  <option
+                    v-for="address in userStore.getAddresses"
+                    :key="address.id"
+                    :value="address.id"
+                  >
+                    {{
+                      address.name.length > 25
+                        ? address.name?.substring(0, 22) + "..."
+                        : address.name
+                    }}
+                  </option>
+                </select>
+              </label>
 
-            <label class="input input--big-label">
-              <span>Контактный телефон:</span>
-              <input
-                type="text"
-                :value="cartStore.choosedPhone"
-                @input="cartStore.setChoosedPhone($event.target.value)"
-                name="tel"
-                placeholder="+7 999-999-99-99"
+              <label class="input input--big-label">
+                <span>Контактный телефон:</span>
+                <input
+                  type="text"
+                  :value="cartStore.choosedPhone"
+                  name="tel"
+                  placeholder="+7 999-999-99-99"
+                  @input="cartStore.setChoosedPhone($event.target.value)"
+                />
+              </label>
+
+              <CartFormAddress
+                v-if="cartStore.choosedReceivingOrderEnum != -2"
               />
-            </label>
-
-            <CartFormAddress v-if="cartStore.choosedReceivingOrderEnum != 1" />
+            </div>
           </div>
         </div>
       </div>
@@ -67,12 +81,6 @@
         <button
           type="submit"
           class="button"
-          :onClick="
-            () => {
-              cartStore.clearCart();
-              router.push({ name: 'success' });
-            }
-          "
           :disabled="!cartStore.isReadyForOrder"
         >
           Оформить заказ
@@ -93,25 +101,27 @@ const router = useRouter();
 const cartStore = useCartStore();
 const userStore = useUserStore();
 
+cartStore.fetchMisc();
+userStore.fetchAddresses();
+
+async function createOrder() {
+  await cartStore.createOrder();
+  cartStore.clearCart();
+  router.push({ name: "success" });
+}
+
 const handleSelectChange = (event) => {
   const selectedValue = event.target.value;
-
-  if (selectedValue == "1") {
-    // Если выбрано "Заберу сам"
-    cartStore.setChoosedAddress(null);
-  } else if (selectedValue === "2") {
-    // Если выбрано "Новый адрес"
-    cartStore.setChoosedAddress({} as any);
-  } else {
-    // Если выбран один из существующих адресов
-    const addressIndex = parseInt(selectedValue) - 3;
-    cartStore.setChoosedAddress(userStore.getAddresses[addressIndex]);
-  }
+  cartStore.setChoosedReceivingOrderEnum(selectedValue);
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
+
+.cart__empty {
+  padding: 20px 30px;
+}
 
 // footer
 .footer {

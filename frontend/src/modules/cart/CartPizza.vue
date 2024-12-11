@@ -1,8 +1,4 @@
 <template>
-  <div class="sheet cart__empty" v-if="cartStore.choosedPizzas.length == 0">
-    <p>В корзине нет ни одной пиццы</p>
-  </div>
-
   <ul v-if="cartStore.choosedPizzas.length > 0" class="cart-list sheet">
     <li
       v-for="(pizza, index) in cartStore.getChoosedPizzas"
@@ -36,8 +32,8 @@
       <div class="cart-list__button">
         <button
           type="button"
-          @click="changePizza(index)"
           class="cart-list__edit"
+          @click="changePizza(index)"
         >
           Изменить
         </button>
@@ -57,7 +53,7 @@ const cartStore = useCartStore();
 const pizzaStore = usePizzaStore();
 const router = useRouter();
 
-function changePizza(index: number) {
+function changePizza(index) {
   const pizzaForChange = cartStore.getChoosedPizzas[index];
   pizzaStore.setPizzaForChangeIt(pizzaForChange);
   cartStore.removePizza(index);
@@ -67,10 +63,6 @@ function changePizza(index: number) {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
-
-.cart__empty {
-  padding: 20px 30px;
-}
 
 .cart-list {
   @include clear-list;

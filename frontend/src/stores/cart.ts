@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import MiscService from "../services/MiscService";
+import OrderService from "../services/OrderService.ts";
+import { useUserStore } from "./user.ts";
 
 interface Misc {
   id: number;
@@ -41,34 +44,15 @@ interface CartState {
   choosedPizzas: ChoosedPizza[];
   choosedReceivingOrderEnum: number;
   choosedPhone: string;
-  choosedAddress: ChoosedAddress | null;
+  choosedAddress: ChoosedAddress;
 }
 
 export const useCartStore = defineStore("cart", {
   state: (): CartState => ({
-    misc: [
-      {
-        id: 1,
-        name: "Cola-Cola 0,5 литра",
-        image: "/public/img/cola.svg",
-        price: 56,
-      },
-      {
-        id: 2,
-        name: "Острый соус",
-        image: "/public/img/sauce.svg",
-        price: 10,
-      },
-      {
-        id: 3,
-        name: "Картошка из печи",
-        image: "/public/img/potato.svg",
-        price: 170,
-      },
-    ],
+    misc: [],
     choosedMiscs: [],
     choosedPizzas: [],
-    choosedReceivingOrderEnum: 1,
+    choosedReceivingOrderEnum: -2,
     choosedPhone: "",
     choosedAddress: {
       street: "",
@@ -109,6 +93,39 @@ export const useCartStore = defineStore("cart", {
     },
   },
   actions: {
+    async fetchMisc() {
+      this.misc = await MiscService.fetch();
+    },
+    async createOrder() {
+      const userStore = useUserStore();
+
+      await OrderService.create({
+        userId: userStore.getWhoAmI?.id ?? null,
+        phone: this.choosedPhone,
+        address:
+          this.choosedReceivingOrderEnum == -2
+            ? null
+            : {
+                street: this.choosedAddress.street,
+                building: this.choosedAddress.building,
+                flat: this.choosedAddress?.flat,
+                comment: this.choosedAddress?.comment,
+              },
+        pizzas: this.choosedPizzas.map((e: ChoosedPizza) => ({
+          name: e.name,
+          sauceId: e.sauceId,
+          doughId: e.doughId,
+          sizeId: e.sizeId,
+          quantity: e.quantity,
+          ingredients: e.ingredients.map((ingredient) => ({
+            ingredientId: ingredient.ingredientId,
+            quantity: ingredient.quantity,
+          })),
+        })),
+        misc: this.choosedMiscs,
+      });
+    },
+
     setMiscQuantity(miscId: number, quantity: number) {
       const miscIndex = this.choosedMiscs.findIndex(
         (misc: ChoosedMisc) => misc.miscId === miscId
@@ -121,7 +138,11 @@ export const useCartStore = defineStore("cart", {
       }
     },
     setPizzaQuantity(pizzaIndex: number, quantity: number) {
-      this.choosedPizzas[pizzaIndex].quantity = quantity;
+      if (quantity == 0) {
+        this.choosedPizzas.splice(pizzaIndex, 1);
+      } else {
+        this.choosedPizzas[pizzaIndex].quantity = quantity;
+      }
     },
 
     addPizza(pizza: ChoosedPizza) {
@@ -135,7 +156,23 @@ export const useCartStore = defineStore("cart", {
     },
 
     setChoosedReceivingOrderEnum(index: number | string) {
-      this.choosedReceivingOrderEnum = Number(index);
+      const userStore = useUserStore();
+      const numberIndex = Number(index);
+
+      if (numberIndex == -2) {
+        // Если выбрано "Заберу сам"
+        this.setChoosedAddress(null);
+        this.choosedReceivingOrderEnum = -2;
+      } else if (numberIndex === -1) {
+        // Если выбрано "Новый адрес"
+        this.setChoosedAddress({} as any);
+        this.choosedReceivingOrderEnum = -1;
+      } else {
+        // Если выбран один из существующих адресов
+        const addressId = numberIndex;
+        this.setChoosedAddress(userStore.getAddressesById(addressId));
+        this.choosedReceivingOrderEnum = addressId;
+      }
     },
     setChoosedPhone(phone: string) {
       this.choosedPhone = phone;
@@ -154,7 +191,7 @@ export const useCartStore = defineStore("cart", {
       this.choosedPhone = "";
       this.choosedMiscs = [];
       this.choosedPizzas = [];
-      this.choosedReceivingOrderEnum = 1;
+      this.choosedReceivingOrderEnum = -2;
     },
   },
 });
