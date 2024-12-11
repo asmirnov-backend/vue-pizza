@@ -91,10 +91,14 @@ export const useUserStore = defineStore("user", {
   },
   actions: {
     async fetchAddresses() {
-      this.addresses = await AddressService.fetch();
+      if (this.isAuthenticated) {
+        this.addresses = await AddressService.fetch();
+      }
     },
     async fetchOrders() {
-      this.orders = await OrderService.fetch();
+      if (this.isAuthenticated) {
+        this.orders = await OrderService.fetch();
+      }
     },
     async deleteOrder(id: number) {
       const indexInStore = this.orders.findIndex((order) => order.id == id);
@@ -120,18 +124,16 @@ export const useUserStore = defineStore("user", {
       pizzaStore.clearChoosed();
 
       const order = this.getOrders.find((e) => e.id === id);
-      cartStore.setChoosedAddress(
-        order?.orderAddress ?? {
-          street: "",
-          building: "",
-          flat: "",
-          comment: "",
-        }
-      );
-      cartStore.setChoosedPhone(order?.phone ?? "");
       cartStore.setChoosedReceivingOrderEnum(
         order?.addressId ? order?.addressId : -2
       );
+      cartStore.setChoosedAddress({
+        street: order?.orderAddress?.street ?? "",
+        building: order?.orderAddress?.building ?? "",
+        flat: order?.orderAddress?.flat ?? "",
+        comment: order?.orderAddress?.comment ?? "",
+      });
+      cartStore.setChoosedPhone(order?.phone ?? "");
       for (const pizza of order?.orderPizzas ?? []) {
         cartStore.addPizza({
           ...pizza,

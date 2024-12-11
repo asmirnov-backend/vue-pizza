@@ -106,7 +106,6 @@ userStore.fetchAddresses();
 
 async function createOrder() {
   await cartStore.createOrder();
-  cartStore.clearCart();
   router.push({ name: "success" });
 }
 

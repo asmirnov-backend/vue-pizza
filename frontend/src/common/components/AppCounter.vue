@@ -12,8 +12,9 @@
       type="text"
       name="counter"
       class="counter__input"
+      readonly
       :value="value"
-      @input="set"
+      disabled
     />
     <button
       type="button"
@@ -45,14 +46,7 @@ const props = defineProps({
   },
 });
 
-// TODO добавить props для цвета (оранж) (Можно ещё max добавить)
-
 const emit = defineEmits(["update:value"]);
-
-const set = (event) => {
-  const newValue = Number(event.target.value) || 0;
-  emit("update:value", newValue);
-};
 
 const increment = () => {
   emit("update:value", props.value + 1);

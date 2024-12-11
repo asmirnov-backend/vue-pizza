@@ -45,7 +45,6 @@ export default class AxiosProvider {
       const { data } = error.response;
       this.interceptors.forEach((interceptor) => {
         if (interceptor.onError) {
-          // todo may be incorrect "data.statusCode"
           interceptor.onError(data.statusCode, data.error.message);
         }
       });
