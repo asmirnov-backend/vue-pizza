@@ -13,7 +13,7 @@
       <small>{{ address.comment }}</small>
     </div>
 
-    <address-edit-form
+    <AddressEditForm
       v-else
       :address="address"
       :title="`Адрес ${index}`"
@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref } from "vue";
-import AddressEditForm from "@/common/components/address/AddressEditForm.vue";
+import AddressEditForm from "@/modules/address/AddressEditForm.vue";
 
 defineProps({
   address: {

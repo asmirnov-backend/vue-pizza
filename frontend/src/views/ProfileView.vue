@@ -21,7 +21,7 @@
   </div>
 
   <div class="layout__address">
-    <address-card
+    <AddressCard
       v-for="(address, index) in userStore.addresses"
       :key="address.id"
       :address="address"
@@ -42,7 +42,7 @@
   </div>
 
   <div v-else class="layout__address">
-    <address-edit-form
+    <AddressEditForm
       title="Новый адрес"
       @save="addAddress"
       @delete="isNewAddressFormOpened = false"
@@ -53,8 +53,8 @@
 <script setup>
 import { useUserStore } from "../stores/user";
 import { getPublicImage } from "../common/helpers";
-import AddressCard from "../common/components/address/AddressCard.vue";
-import AddressEditForm from "../common/components/address/AddressEditForm.vue";
+import AddressCard from "../modules/address/AddressCard.vue";
+import AddressEditForm from "../modules/address/AddressEditForm.vue";
 import { ref } from "vue";
 const userStore = useUserStore();
 
